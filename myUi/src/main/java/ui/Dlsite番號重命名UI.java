@@ -1,8 +1,6 @@
-package f;
+package ui;
 
 import java.awt.EventQueue;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,11 +12,15 @@ import javax.swing.JTextField;
 
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.demo.JxBrowserDemo;
+import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
-import javax.swing.JPanel;
+import regular.正規表示式例子;
+import regular.正規表示式取值;
+import ui.ieOk動作.Dlsite讀完命名事件;
+import ui.動作.拖拉檔案處理;
 
-public class myAppMain {
+public class Dlsite番號重命名UI {
 
 	private JFrame frame;
 	private JTextField textField;
@@ -35,11 +37,10 @@ public class myAppMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					myAppMain window = new myAppMain();
+					Dlsite番號重命名UI window = new Dlsite番號重命名UI();
 					window.drop1 = drop1;
 					window.frame.setVisible(true);
-					window.frame
-							.setDropTarget(new DropTarget(window.frame, DnDConstants.ACTION_REFERENCE, drop1, true));
+					drop1.設定啟用拖拉的容器(window.frame);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -61,7 +62,7 @@ public class myAppMain {
 	/**
 	 * Create the application.
 	 */
-	public myAppMain() {
+	public Dlsite番號重命名UI() {
 		initialize();
 	}
 
@@ -81,21 +82,37 @@ public class myAppMain {
 		textField.setColumns(10);
 
 		JButton btnNewButton = new JButton("讀下一筆");
+		// 按鈕後的讀檔的動作
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				List<File> list = drop1.getList();
 				if (list.size() > 0) {
-					textField.setText(list.get(0).getAbsolutePath());
-					list.remove(list.get(0));
+					File f = list.get(0);
+					list.remove(0);// 跳下一筆
+					textField.setText(f.getName());
+					String rj = 正規表示式取值.取得第一個值(正規表示式例子.取出番號RJ, f.getName());
+					// 取不到番號就做不下去
+					if (rj.length() == 0) {
+						return;
+					}
+					String url1 = "http://www.dlsite.com/maniax/work/=/product_id/%s.html";
+					System.out.println(String.format(url1, rj.toUpperCase()));
+					// browser.removeLoadListener(browser.getlo);
+					for (LoadListener o : browser.getLoadListeners()) {
+						browser.removeLoadListener(o);
+					}
+					browser.addLoadListener(new Dlsite讀完命名事件(f, rj.toUpperCase()));
+					browser.loadURL(String.format(url1, rj.toUpperCase()));
+
 				} else {
 					textField.setText("沒了");
-					browser.loadURL("http://www.google.com");
+
 				}
 			}
 		});
 		btnNewButton.setBounds(294, 29, 99, 27);
 		frame.getContentPane().add(btnNewButton);
-
-		手動加入brower(); 
+		// 加入brower到panel中
+		手動加入brower();
 	}
 }

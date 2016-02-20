@@ -5,8 +5,13 @@
 	<artifactId>myFileAccs</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-
-
+	<dependencies>
+		<dependency>
+			<groupId>myUtils</groupId>
+			<artifactId>myUtils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>

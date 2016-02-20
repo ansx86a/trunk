@@ -1,8 +1,10 @@
-package f;
+package ui.動作;
 
+import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
@@ -37,6 +39,10 @@ public class 拖拉檔案處理 extends DropTargetAdapter {
 
 	public List<File> getList() {
 		return list;
+	}
+
+	public void 設定啟用拖拉的容器(Component c) {
+		c.setDropTarget(new DropTarget(c,DnDConstants.ACTION_REFERENCE,this,true));
 	}
 
 }

@@ -17,6 +17,8 @@ public class 字幕 {
 
 	public 字幕() {
 		字幕副檔名.add(".ass");
+		字幕副檔名.add(".ssa");
+		字幕副檔名.add(".saa");
 		字幕副檔名.add(".smi");
 		字幕副檔名.add(".srt");
 
@@ -29,6 +31,8 @@ public class 字幕 {
 		拆分字.add("]");
 		拆分字.add(" ");
 		拆分字.add(".");
+		拆分字.add("第");
+		拆分字.add("話");
 	}
 
 	public static void main(String[] args) {
@@ -113,4 +117,13 @@ public class 字幕 {
 		}
 		return template;
 	}
+
+	public ArrayList<String> get拆分字() {
+		return 拆分字;
+	}
+
+	public void set拆分字(ArrayList<String> 拆分字) {
+		this.拆分字 = 拆分字;
+	}
+	
 }
