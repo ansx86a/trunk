@@ -1,7 +1,11 @@
 package filesService;
 
 import java.io.File;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
+import org.apache.commons.io.FileUtils;
 
 public class 檔案目錄上下層處理 {
 
@@ -37,7 +41,14 @@ public class 檔案目錄上下層處理 {
 			File newFile = subFile.toPath().resolveSibling(subFile.getName()).toFile();
 			// 避免相同的名稱向上移動
 			if (!newFile.exists()) {
-				subFile.renameTo(newFile);
+				if (subFile.isDirectory()) {
+					// FileUtils.moveDirectory(subFile, newFile);
+					// Files.move(subFile.toPath(), newFile.toPath(),
+					// StandardCopyOption.ATOMIC_MOVE);
+					目錄rename.目錄搬移(subFile, newFile);
+				} else {
+					subFile.renameTo(newFile);
+				}
 			} else {
 				System.out.println("已有上一層相同的名稱--" + newFile);
 			}

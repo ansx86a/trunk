@@ -1,13 +1,20 @@
 package ui.ieOk動作;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.JSValue;
 import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
 import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
+
+import filesService.目錄rename;
 
 public class Dlsite讀完命名事件 extends LoadAdapter {
 	private File sourceFile;
@@ -54,9 +61,12 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 		// 開始重新命名
 		if (sourceFile.isDirectory()) {
 			File newFile = sourceFile.toPath().resolveSibling(result).toFile();
-			sourceFile.renameTo(newFile);
+			// FileUtils.moveDirectory(sourceFile, newFile);
 			System.out.println(sourceFile.getAbsolutePath());
 			System.out.println(newFile.getAbsolutePath());
+			// Files.move(sourceFile.toPath(), newFile.toPath(),
+			// StandardCopyOption.COPY_ATTRIBUTES);
+			目錄rename.目錄搬移(sourceFile, newFile);
 		}
 	}
 
