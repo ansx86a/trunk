@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.JSValue;
 import com.teamdev.jxbrowser.chromium.demo.JxBrowserDemo;
 import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
@@ -46,6 +47,18 @@ public class Dlsite番號重命名UI {
 				}
 			}
 		});
+	}
+
+	public void 取得選取字串() {
+		// 先把javascript的文字寫上去，之後再加入
+		// var selObj = window.getSelection();
+		// var selectedText = selObj.toString();
+		
+		String script = "var selObj = window.getSelection();";
+		script += "document.toJavaSelectValue = selObj.toString();";
+		browser.executeJavaScript(script);
+		JSValue document = browser.executeJavaScriptAndReturnValue("document");
+		JSValue value = document.asObject().getProperty("toJavaSelectValue");
 	}
 
 	/**
