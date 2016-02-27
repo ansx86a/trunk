@@ -34,7 +34,7 @@ public class Cv處理 {
 
 	public String getCvNames(String html) {
 		String cv = "";
-		for (String s : getCvList()) {
+		for (String s : getCvList2()) {
 			if (html.contains(s)) {
 				cv += ("_" + s);
 			}

@@ -2,6 +2,9 @@ package ui.ieOk動作;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.function.Function;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.JSValue;
@@ -15,14 +18,16 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 	private Browser br;
 	private String rj;
 	private Cv處理 cv處理 = new Cv處理();
+	private Function<String, String> cvf;
 
 	public static void main(String arg[]) throws URISyntaxException {
 
 	}
 
-	public Dlsite讀完命名事件(File f, String rj) {
+	public Dlsite讀完命名事件(File f, String rj, Function<String, String> cvf) {
 		sourceFile = f;
 		this.rj = rj;
+		this.cvf = cvf;
 	}
 
 	@Override
@@ -41,6 +46,7 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 			JSValue jvWorkName = document.asObject().getProperty("toJavaValueWorkName");
 			JSValue jvMakerName = document.asObject().getProperty("toJavaValueMakerName");
 			String html = jvHtml.getStringValue();
+			html = html.replaceAll(" ", "").replaceAll("　", "");
 			String titleName = jvWorkName.getStringValue();
 			String makerName = jvMakerName.getStringValue();
 			String cv = cv處理.getCvNames(html);
@@ -51,8 +57,13 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 			result = "[" + makerName + "]" + allAge + titleName + "(" + cv + ")" + rj;
 			result = result.replaceAll("【ポイント.{3}還元】", "");
 			br.executeJavaScript("$(\"#work_name\").text('" + result + "');");
-			System.out.println(result);
 
+			System.out.println(result);
+			// 要蓋掉不可命名的字元 /\*|?<>
+			result = StringUtils.replaceEach(result, new String[] { "/", "\\", "*", "|", "?", "<", ">", ":", "\"" },
+					new String[] { "／", "＼", "＊", "｜", "？", "＜", "＞", "：", "”" });
+			System.out.println(result);
+			cvf.apply("(" + cv + ")" + rj);
 		} catch (Exception ex) {
 			// 重試一次，這次要導到一般向
 			// http://www.dlsite.com/home/work/=/product_id/RJ139194.html
