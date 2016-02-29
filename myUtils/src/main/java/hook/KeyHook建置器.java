@@ -32,10 +32,9 @@ public class KeyHook建置器 implements NativeKeyListener {
 		} catch (NativeHookException e) {
 			e.printStackTrace();
 		}
-		GlobalScreen.addNativeKeyListener(key);
 		Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
 		logger.setLevel(Level.WARNING);
-		
+		GlobalScreen.addNativeKeyListener(key);
 	}
 
 	@Override

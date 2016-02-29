@@ -69,7 +69,8 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 			// http://www.dlsite.com/home/work/=/product_id/RJ139194.html
 			// http://www.dlsite.com/maniax/work/=/product_id/%s.html";
 			if (!br.getURL().contains("home")) {
-				String url = String.format("http://www.dlsite.com/home/work/=/product_id/%s.html", rj.toUpperCase());
+				//String url = String.format("http://www.dlsite.com/home/work/=/product_id/%s.html", rj.toUpperCase());
+				String url = String.format("http://www.dlsite.com/maniax/work/=/product_id/%s.html", rj.toUpperCase());
 				br.loadURL(url);
 				return;
 			}
@@ -84,7 +85,12 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 			System.out.println(newFile.getAbsolutePath());
 			// Files.move(sourceFile.toPath(), newFile.toPath(),
 			// StandardCopyOption.COPY_ATTRIBUTES);
-			目錄rename.目錄搬移(sourceFile, newFile);
+			try {
+				目錄rename.目錄搬移(sourceFile, newFile);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 		}
 	}
 

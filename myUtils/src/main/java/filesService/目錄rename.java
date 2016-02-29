@@ -7,8 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class 目錄rename {
+	public static void main(String args[]) throws InterruptedException {
+		String path = "F:\\BaiduYunDownload\\gmgard.us\\RJ129124\\yuri01_mp3 RJ129124";
+		File f = new File(path);
+		deleteBlankDir(f);
+	}
 
-	public static void 目錄搬移(File d1, File d2) {
+	public static void 目錄搬移(File d1, File d2) throws InterruptedException {
 		if (d1.isFile() || d2.isFile()) {
 			System.out.println("不是目錄");
 			return;
@@ -20,33 +25,8 @@ public class 目錄rename {
 
 		for (File f : d1.listFiles()) {
 			renameFile(f, d2.toPath(), new ArrayList<String>());
-			if (f.isFile()) {
-				// 這一層沒東西的時候刪除這一層的目錄
-				if (f.getParentFile().listFiles().length == 0) {
-					f.getParentFile().delete();
-				}
-			} else if (f.isDirectory()) {
-				// 沒目錄沒東西時自已清空
-				if (f.listFiles().length == 0) {
-					f.delete();
-				}
-			}
 		}
-		try {
-			Thread.sleep(1000);//刪除目錄好像有一點非同步，等個一秒給它動作
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		System.out.println("-目錄長度是？？？------------" + d1.listFiles().length);
-		if(d1.listFiles().length>0){
-			for(File f:d1.listFiles()){
-				System.out.println(f.getAbsolutePath());
-			}
-		}
-		
-		if (d1.isDirectory() && d1.listFiles().length == 0) {
-			d1.delete();
-		}
+		deleteBlankDir(d1);
 	}
 
 	/**
@@ -57,8 +37,9 @@ public class 目錄rename {
 	 *            要從新命名的路徑(重新定位的root，相對來說是目標目錄)
 	 * @param list
 	 *            要從新命名的目錄路徑(root下去的，每遞迴一次多一個目錄，放string)
+	 * @throws InterruptedException
 	 */
-	private static void renameFile(File f, Path pt, List<String> list) {
+	private static void renameFile(File f, Path pt, List<String> list) throws InterruptedException {
 		// System.out.println(f.getAbsolutePath());
 		if (f.isFile()) {
 			Path p2 = Paths.get(pt.toString(), list.toArray(new String[] {}));
@@ -74,11 +55,34 @@ public class 目錄rename {
 				l.add(f.getName());
 				renameFile(subF, pt, l);
 			}
-			// 沒目錄沒東西時自已清空
-			if (f.listFiles().length == 0) {
-				f.delete();
-			}
 		}
 	}
 
+	private static void deleteBlankDir(File dir) throws InterruptedException {
+		if (!dir.isDirectory()) {
+			return;
+		}
+		File fs[] = dir.listFiles();
+		if (fs.length == 0) {
+			dir.delete();
+			Thread.sleep(100);
+			return;
+		}
+		for (File f : fs) {
+			// 有檔案就先中斷，要全是目錄才是空目錄
+			if (!f.isDirectory()) {
+				return;
+			}
+			deleteBlankDir(f);
+		}
+		fs = dir.listFiles();
+		if (fs.length > 0) {
+			System.out.println("清空目錄錯誤=====================");
+			return;
+		} else {
+			dir.delete();
+			Thread.sleep(100);
+		}
+
+	}
 }

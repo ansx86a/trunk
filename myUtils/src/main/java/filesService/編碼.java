@@ -45,10 +45,16 @@ public class 編碼 {
 			// 2.再用全部的編碼encode一輪應該就會回覆成自然語言了
 
 		}
+		b="僀儔僗僩".getBytes("big5");
 		System.out.println("======================");
 		for (String e : get全部編碼名稱()) {
-			System.out.println(new String(b, e));
+			//System.out.println(new String(b, e));
+			b="02儀儕乕僴乕僪儌乕僪".getBytes(e);
+			System.out.println(new String(b,"SJIS")+"-------sjis--"+e);
+			System.out.println(new String(b,"EUC_JP")+"-------enujs--"+e);
+			
 		}
+		
 
 	}
 }

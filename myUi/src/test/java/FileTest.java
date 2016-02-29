@@ -1,12 +1,11 @@
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
 import filesService.目錄rename;
 
 public class FileTest {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
 		String s1 = "G:\\temp\\456";
 		String s2 = "G:\\temp\\123456";

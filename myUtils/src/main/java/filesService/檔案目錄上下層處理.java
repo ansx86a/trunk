@@ -45,7 +45,12 @@ public class 檔案目錄上下層處理 {
 					// FileUtils.moveDirectory(subFile, newFile);
 					// Files.move(subFile.toPath(), newFile.toPath(),
 					// StandardCopyOption.ATOMIC_MOVE);
-					目錄rename.目錄搬移(subFile, newFile);
+					try {
+						目錄rename.目錄搬移(subFile, newFile);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+
 				} else {
 					subFile.renameTo(newFile);
 				}

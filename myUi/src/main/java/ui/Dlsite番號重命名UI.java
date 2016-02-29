@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -23,6 +24,7 @@ import regular.正規表示式取值;
 import ui.ieOk動作.Cv處理;
 import ui.ieOk動作.Dlsite讀完命名事件;
 import ui.動作.拖拉檔案處理;
+import utils.剪貼簿;
 
 public class Dlsite番號重命名UI {
 
@@ -50,7 +52,12 @@ public class Dlsite番號重命名UI {
 					drop1.設定啟用拖拉的容器(window.frame);
 					// Function<Object,Object> f=o->{return null;};
 					KeyHook建置器.加入一個hook(111, o -> {
-						System.out.println(o);
+						File cf =剪貼簿.取得第一個檔案();
+						if(cf!=null&&cf.exists()&&cf.exists()){
+							ArrayList<File> list = new ArrayList<>();
+							list.add(cf);
+							window.執行讀檔並轉導的動作(list);
+						}
 						return null;
 					});
 				} catch (Exception e) {
@@ -104,7 +111,8 @@ public class Dlsite番號重命名UI {
 			if (rj.length() == 0) {
 				return;
 			}
-			String url1 = "http://www.dlsite.com/maniax/work/=/product_id/%s.html";
+			//String url1 = "http://www.dlsite.com/maniax/work/=/product_id/%s.html";
+			String url1 = "http://www.dlsite.com/home/work/=/product_id/%s.html";
 			System.out.println(String.format(url1, rj.toUpperCase()));
 			// browser.removeLoadListener(browser.getlo);
 			for (LoadListener o : browser.getLoadListeners()) {

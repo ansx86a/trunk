@@ -7,7 +7,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class 剪貼簿 {
@@ -15,7 +14,10 @@ public class 剪貼簿 {
 	public static void main(String[] args) {
 		// 放入文字("dddddd");
 		// 放入檔案("G:\\temp\\111");
+
 		System.out.println(取得複製的檔案列表());
+		System.out.println(取得複製的檔案列表().get(0));
+		System.out.println(取得複製的檔案列表().get(0).getClass());
 	}
 
 	public static String 取得複製的文字() {
@@ -32,15 +34,20 @@ public class 剪貼簿 {
 		return result;
 	}
 
+	/**
+	 * 這裡一開始以為是回傳文字列表，結果是檔案列表<br>
+	 * 先都以文字列表考慮，以後再想要不要改回檔案列表
+	 * @return
+	 */
 	public static List<String> 取得複製的檔案列表() {
-		System.out.println("========");
 		ArrayList<String> result = new ArrayList<>();
 		Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
 		Transferable t = c.getContents(null);
 		if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 			try {
-				System.out.println(t);
-				result.addAll((Collection<? extends String>) t.getTransferData(DataFlavor.javaFileListFlavor));
+				for (File o : (List<File>) (t.getTransferData(DataFlavor.javaFileListFlavor))) {
+					result.add(o.getAbsolutePath());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
