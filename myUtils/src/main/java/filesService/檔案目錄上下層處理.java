@@ -15,6 +15,10 @@ public class 檔案目錄上下層處理 {
 		a.往上移一層目錄controller(path);
 	}
 
+	/**
+	 * 這裡的path是指父目錄
+	 * @param path
+	 */
 	public void 往上移一層目錄controller(String path) {
 		File f = new File(path);
 		if (f.getParentFile() == null) {
@@ -36,9 +40,9 @@ public class 檔案目錄上下層處理 {
 
 	}
 
-	public void 往上移一層目錄(File f) {// f為基準點目錄，subFile主要是找到子檔案非目錄後，往上移一層
+	private void 往上移一層目錄(File f) {// f為基準點目錄，subFile主要是找到子檔案非目錄後，往上移一層
 		for (File subFile : f.listFiles()) {
-			File newFile = subFile.toPath().resolveSibling(subFile.getName()).toFile();
+			File newFile = subFile.getParentFile().toPath().resolveSibling(subFile.getName()).toFile();
 			// 避免相同的名稱向上移動
 			if (!newFile.exists()) {
 				if (subFile.isDirectory()) {

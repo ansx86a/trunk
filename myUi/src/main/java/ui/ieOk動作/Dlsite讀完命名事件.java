@@ -54,6 +54,11 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 			if (br.getURL().contains("home")) {
 				allAge = "[一般]";
 			}
+			if (StringUtils.trimToNull(titleName) == null) {
+				System.out.println("找不到rj");
+				throw new Exception("blank titleName");
+			}
+
 			result = "[" + makerName + "]" + allAge + titleName + "(" + cv + ")" + rj;
 			result = result.replaceAll("【ポイント.{3}還元】", "");
 			br.executeJavaScript("$(\"#work_name\").text('" + result + "');");
@@ -69,9 +74,11 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 			// http://www.dlsite.com/home/work/=/product_id/RJ139194.html
 			// http://www.dlsite.com/maniax/work/=/product_id/%s.html";
 			if (!br.getURL().contains("home")) {
-				//String url = String.format("http://www.dlsite.com/home/work/=/product_id/%s.html", rj.toUpperCase());
+				// String url =
+				// String.format("http://www.dlsite.com/home/work/=/product_id/%s.html",
+				// rj.toUpperCase());
 				String url = String.format("http://www.dlsite.com/maniax/work/=/product_id/%s.html", rj.toUpperCase());
-				br.loadURL(url);
+				//br.loadURL(url);
 				return;
 			}
 			System.out.println("找不到");
