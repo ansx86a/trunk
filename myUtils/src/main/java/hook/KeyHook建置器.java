@@ -11,7 +11,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
- * 由function來delgate熱鍵
+ * 由function來delegate熱鍵
  * @author rockx
  *
  */
