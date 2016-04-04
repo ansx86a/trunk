@@ -61,12 +61,17 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 
 			result = "[" + makerName + "]" + allAge + titleName + "(" + cv + ")" + rj;
 			result = result.replaceAll("【ポイント.{3}還元】", "");
+			result = result.replaceAll("([0-9]){2}%還元", "");
+			result = result.replaceAll("\r", "");
+			result = result.replaceAll("\n", "");
+
 			br.executeJavaScript("$(\"#work_name\").text('" + result + "');");
 
 			System.out.println(result);
 			// 要蓋掉不可命名的字元 /\*|?<>
-			result = StringUtils.replaceEach(result, new String[] { "/", "\\", "*", "|", "?", "<", ">", ":", "\"" },
-					new String[] { "／", "＼", "＊", "｜", "？", "＜", "＞", "：", "”" });
+			result = StringUtils.replaceEach(result,
+					new String[] { "/", "\\", "*", "|", "?", "<", ">", ":", "\"", "!" },
+					new String[] { "／", "＼", "＊", "｜", "？", "＜", "＞", "：", "”", "！" });
 			System.out.println(result);
 			cvf.apply("(" + cv + ")" + rj);
 		} catch (Exception ex) {
@@ -78,7 +83,7 @@ public class Dlsite讀完命名事件 extends LoadAdapter {
 				// String.format("http://www.dlsite.com/home/work/=/product_id/%s.html",
 				// rj.toUpperCase());
 				String url = String.format("http://www.dlsite.com/maniax/work/=/product_id/%s.html", rj.toUpperCase());
-				//br.loadURL(url);
+				// br.loadURL(url);
 				return;
 			}
 			System.out.println("找不到");
