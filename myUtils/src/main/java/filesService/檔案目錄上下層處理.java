@@ -45,6 +45,7 @@ public class 檔案目錄上下層處理 {
 			File newFile = subFile.getParentFile().toPath().resolveSibling(subFile.getName()).toFile();
 			// 避免相同的名稱向上移動
 			if (!newFile.exists()) {
+				//搬目錄或是搬檔案
 				if (subFile.isDirectory()) {
 					// FileUtils.moveDirectory(subFile, newFile);
 					// Files.move(subFile.toPath(), newFile.toPath(),
@@ -54,7 +55,6 @@ public class 檔案目錄上下層處理 {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-
 				} else {
 					subFile.renameTo(newFile);
 				}

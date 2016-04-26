@@ -3,12 +3,14 @@ package filesService;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.apache.commons.io.FileUtils;
-
 import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
-import net.lingala.zip4j.util.Zip4jUtil;
+
+import org.apache.commons.io.FileUtils;
+
+import utils.Utils;
 
 /**
  * 注意ZIP4J的一個特點，如果zip檔已存在，他不會把他zip蓋過去，而是在zip檔中加入此次的東西檔<br>
@@ -16,7 +18,7 @@ import net.lingala.zip4j.util.Zip4jUtil;
  * @author ai
  *
  */
-public class ZIP壓縮 {
+public class ZIP解壓縮 {
 
 	public static void 目錄壓ZIP(File f, boolean deleteAfterZip) throws Exception {
 		if (f.isFile()) {
@@ -61,11 +63,26 @@ public class ZIP壓縮 {
 		}
 	}
 
-	public static void main(String args[]) throws Exception {
-		File f = new File("Z:/zip4j_examples_1.3.2/Zip4jExamples");
-		目錄壓ZIP(f, true);
-		System.out.println("end");
+	public static void 解壓到目錄(File zipFile, File extDir) {
+		try {
+			ZipFile zfile;
+			zfile = new ZipFile(zipFile.getAbsolutePath());
+			zfile.extractAll(extDir.getAbsolutePath());
+		} catch (ZipException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public static void main(String args[]) throws Exception {
+		File f = Utils.getResourceFromRoot("filesService");
+		System.out.println(f);
+		目錄壓ZIP(f, false);
+		File zipFile = Utils.getResourceFromRoot("filesService.zip");
+		File extDir = Utils.getResourceFromRoot("filesService壓解縮");
+		System.out.println(extDir);
+		解壓到目錄(zipFile,extDir);
+		
+		System.out.println("end");
 	}
 
 }
