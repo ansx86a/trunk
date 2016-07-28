@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import utils.簡繁轉換;
+
 public class 字幕 {
 
 	private ArrayList<String> 字幕副檔名 = new ArrayList<String>();
@@ -35,14 +37,14 @@ public class 字幕 {
 		拆分字.add("話");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		字幕 sub = new 字幕();
 		File f = new File("Z:\\test");
 		sub.重新命名字幕檔(f);
 
 	}
 
-	public void 重新命名字幕檔(File f) {
+	public void 重新命名字幕檔(File f) throws IOException {
 		System.out.println("start rename");
 		ArrayList<File> listMovie = new ArrayList<>();
 		ArrayList<File> listSub = new ArrayList<>();
@@ -53,6 +55,7 @@ public class 字幕 {
 			}
 			if (StringUtils.endsWithAny(subFile.getName().toLowerCase(), 字幕副檔名.toArray(new String[] {}))) {
 				listSub.add(subFile);
+				簡繁轉換.簡轉繁(subFile);
 				continue;
 			}
 			if (StringUtils.endsWithAny(subFile.getName().toLowerCase(), 影片副檔名.toArray(new String[] {}))) {

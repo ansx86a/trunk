@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,7 +81,14 @@ public class 字幕重新命名UI {
 						System.out.println(list2);
 						sub.set拆分字(list2);
 					}
-					sub.重新命名字幕檔(f);
+					try {
+						sub.重新命名字幕檔(f);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						textField.setText("執行失敗");
+						return;
+					}
 					textField.setText("執行完成ok");
 				} else {
 					textField.setText("執行失敗");
