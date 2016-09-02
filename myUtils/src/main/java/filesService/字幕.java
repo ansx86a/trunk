@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,12 +64,29 @@ public class 字幕 {
 				continue;
 			}
 		}
+		if (listSub.size() == 0) {
+			System.out.println("sub files size == 0 to return");
+			return;
+		}
+		File bakDir = new File(listSub.get(0).getParent(), "baksub" + new Date().getTime());
+		bakDir.mkdirs();
+		System.out.println("bakdir=" + bakDir);
 		// 跑兩個迴圈去把相同數字的file找出來
 		for (File mf : listMovie) {
 			int mf_i = getNumber(mf.getName());
-			for (File sf : listSub) {
+			for (File sf : listSub.toArray(new File[] {})) {
 				if (mf_i == getNumber(sf.getName())) {
-					rename(mf, sf);
+					listSub.remove(sf);
+					File bakFile = new File(bakDir, sf.getName());
+					System.out.println("bakFile=" + bakFile);
+					if (sf.getAbsolutePath().equals(mf.getAbsolutePath())) {
+						//本來字幕就是要的名字，同名，就copyfile
+						FileUtils.copyFile(mf, bakFile);
+					} else {
+						//重新命名字幕並移到
+						rename(mf, sf);
+						sf.renameTo(bakFile);
+					}
 					break;
 				}
 			}
@@ -79,7 +97,8 @@ public class 字幕 {
 	public void rename(File mf, File sf) {
 		String newName = mf.getName().split("\\.")[0];
 		newName += sf.getName().substring(sf.getName().lastIndexOf("."));
-		Path newPath = sf.toPath().resolveSibling("sub2").resolve(newName);
+		// Path newPath = sf.toPath().resolveSibling("sub2").resolve(newName);
+		Path newPath = sf.toPath().resolveSibling(newName);
 		try {
 			FileUtils.copyFile(sf, newPath.toFile());
 		} catch (IOException e) {
@@ -128,5 +147,5 @@ public class 字幕 {
 	public void set拆分字(ArrayList<String> 拆分字) {
 		this.拆分字 = 拆分字;
 	}
-	
+
 }

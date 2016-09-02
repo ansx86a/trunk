@@ -11,7 +11,7 @@ public class 檔案目錄上下層處理 {
 
 	public static void main(String[] s) {
 		檔案目錄上下層處理 a = new 檔案目錄上下層處理();
-		String path = "F:\\BaiduYunDownload\\anime\\樱子小姐的脚下埋着尸体";
+		String path = "z:/2";
 		a.往上移一層目錄controller(path);
 	}
 
