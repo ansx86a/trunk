@@ -21,9 +21,7 @@ public class 簡繁轉換 {
 		s = 簡轉繁(s);
 		System.out.println(s);
 
-		File f = new File("z:/1.ass");
-		String str = FileUtils.readFileToString(f);
-		System.out.println(簡轉繁(str));
+		整個目錄轉換簡轉繁(new File("z:/1"));
 	}
 
 	public static String 繁轉簡(String text) {
@@ -54,7 +52,14 @@ public class 簡繁轉換 {
 			return;
 
 		for (File f : dir.listFiles()) {
-			if (!StringUtils.endsWithIgnoreCase(f.getName(), ".txt"))
+			int match=0;
+			if (StringUtils.endsWithIgnoreCase(f.getName(), ".txt"))
+				match++;
+			if (StringUtils.endsWithIgnoreCase(f.getName(), ".ass"))
+				match++;
+			if (StringUtils.endsWithIgnoreCase(f.getName(), ".ssa"))
+				match++;
+			if(match==0)
 				continue;
 			String s = FileUtils.readFileToString(f, "utf8");
 			FileUtils.writeStringToFile(f, 簡轉繁(s));
