@@ -1,15 +1,15 @@
-package ui;
+package 爬蟲;
+
 
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import ui.ieOk動作.愛看漫讀完漫畫頁事件;
+
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.demo.JxBrowserDemo;
-import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
-
-import ui.ieOk動作.愛看漫讀完漫畫頁事件;
 
 public class 捉漫畫用 {
 

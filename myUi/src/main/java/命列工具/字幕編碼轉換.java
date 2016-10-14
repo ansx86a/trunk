@@ -35,6 +35,9 @@ public class 字幕編碼轉換 {
 			return null;
 		});
 	}
+	
+	
+	
 
 	public void toEnc(File f) throws IOException {
 		if (f.isFile()) {
