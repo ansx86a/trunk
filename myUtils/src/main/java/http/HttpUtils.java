@@ -1,14 +1,13 @@
 package http;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpEntity;
@@ -27,8 +26,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.util.EntityUtils;
 
-import utils.Utils;
-
 public class HttpUtils {
 
 	private CookieStore cookieStore;
@@ -38,11 +35,26 @@ public class HttpUtils {
 
 	}
 
+	public void cookiesHttpTry(String url, File outFile, int tryCount) {
+		for (int i = 0; i < tryCount; i++) {
+			try {
+				System.out.println("send request time:"+new Date());
+				cookiesHttp(url, outFile);
+				return;
+			} catch (Exception ex) {
+				outFile.delete();
+				System.out.println("send request url:"+url);
+				ex.printStackTrace();
+			}
+		}
+		throw new RuntimeException("超過重試次數:"+url);
+	}
+
 	public void cookiesHttp(String url, File outFile) throws IOException {
 		HttpGet httpget = new HttpGet(url);
 		// 設定config，例如timeout的時間，1000是1秒的意思吧
 		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).setSocketTimeout(1000)
-				.setConnectTimeout(1000).build();
+				.setConnectTimeout(100000).build();
 		httpget.setConfig(requestConfig);
 
 		try (CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
@@ -53,14 +65,18 @@ public class HttpUtils {
 
 			HttpEntity entity = response.getEntity();
 			System.out.println("entity=" + entity);
-			InputStream in = entity.getContent();
+			// InputStream in = entity.getContent();
 			if (entity != null) {
-				byte[] bs = IOUtils.toByteArray(in);
-				System.out.println("length=" + bs.length);
-				FileUtils.writeByteArrayToFile(outFile, bs);
-				System.out.println("write file ok==" + outFile);
+				try (InputStream in = entity.getContent(); FileOutputStream fo = new FileOutputStream(outFile)) {
+					IOUtils.copy(in, fo);
+					System.out.println("write file ok==" + outFile);
+				}
+				// IOUtils.copy(input, output);
+				// byte[] bs = IOUtils.toByteArray(in);
+				// System.out.println("length=" + bs.length);
+				// FileUtils.writeByteArrayToFile(outFile, bs);
+				// System.out.println("write file ok==" + outFile);
 			}
-			in.close();
 			EntityUtils.consume(entity);
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -25,6 +25,9 @@ public class 紳士漫畫 {
 		}
 
 		漫畫自然排序法重新命名: {
+			if (true) {
+				break 漫畫自然排序法重新命名;
+			}
 			File dir = new File("z:/1");
 			TreeSet<String> set = new TreeSet<String>();
 			for (File f : dir.listFiles()) {
@@ -36,7 +39,7 @@ public class 紳士漫畫 {
 				File f = new File(s);
 				String sub = StringUtils.substringAfter(s, ".");
 				File f2 = new File("z:/2/" + String.format("%05d." + sub, i++));
-				System.out.println(""+f+"<F-->"+f2);
+				System.out.println("" + f + "<F-->" + f2);
 				FileUtils.copyFile(f, f2);
 			}
 		}
@@ -60,18 +63,23 @@ public class 紳士漫畫 {
 			System.out.println("絕對路徑:" + absUri);
 
 			// 試跑一次就好
-			// 漫畫list頁(absUri.toString());
+			漫畫list頁(absUri.toString());
 			break;
 		}
 
 	}
 
 	public void 漫畫list頁(String url) throws Exception {
-		String html = HttpUtils.getHttp(url);
-		Document doc = Jsoup.parse(html);
+		Document doc = Jsoup.connect(url).get();
 		URI uri = new URI(url);
-		Elements es = null;
-		// System.out.println(doc.html());
+		String downloadPage = doc.select("a:contains(下載本子)").attr("href");
+		System.out.println(downloadPage);
+		System.out.println(uri.resolve(downloadPage));
+
+		doc = Jsoup.connect(uri.resolve(downloadPage).toString()).get();
+		Elements es = doc.select("a:contains(本地下載)");
+		//發現本地下載1和2都是一樣的位扯，所以就用1就好了
+		System.out.println(es.attr("href"));
 
 	}
 
