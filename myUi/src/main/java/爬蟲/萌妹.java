@@ -21,14 +21,17 @@ import db.SqlDao;
 public class 萌妹 {
 	private HttpUtils h = new HttpUtils();
 	private static int[] skipPost = new int[] { 2057, 2924, 4098 };
+	private static String fileSavePath = "e:/moe/post";
 
 	public static void main(String[] args) throws Exception {
+
 		用title3重新命名: {
-			if (1 == 0) {
+			if (false) {
 				break 用title3重新命名;
 			}
 			萌妹 a = new 萌妹();
 			a.用title3重新命名();
+			System.out.println("end 重新命名");
 			return;
 		}
 
@@ -36,22 +39,11 @@ public class 萌妹 {
 			// https://yande.re/pool?page=157
 			// https://yande.re/pool?page=1
 			萌妹 a = new 萌妹();
-			for (int i = 70; i <= 100; i++) {
+			for (int i = 145; i <= 157; i++) {
 				String url = "https://yande.re/pool?page=" + i;
 				a.readlist(url);
 			}
 		}
-		// 捉檔案的部分: {
-		// if (true) {
-		// break 捉檔案的部分;
-		// }
-		// String url = "https://yande.re/pool/zip/4219?jpeg=1";
-		// HttpUtils h = new HttpUtils();
-		// File f = Utils.getResourceFromRoot("爬蟲/萌妹cookies.txt");
-		// String s = FileUtils.readFileToString(f);
-		// h.setCookieStore(s);
-		// h.cookiesHttp(url, new File("z:/123.zip"));
-		// }
 		System.out.println("end");
 	}
 
@@ -108,29 +100,13 @@ public class 萌妹 {
 			}
 		}
 		String fileName = map.get("title2") == null ? map.get("title1").toString() : map.get("title2").toString();// 主要用subTitle當檔名
-		fileName = 處理檔名(fileName);
-		File f = checkFile(fileName);
+		fileName = 共用.處理檔名(fileName);
+		File f = 共用.checkFile(fileSavePath, fileName);
 		map.put("file_path", f.toString());
 
 		捉檔案(absDownload.toString(), Utils.getResourceFromRoot("爬蟲/萌妹cookies.txt"), f);
 		System.out.println("新增資料:" + map);
 		SqlDao.get().新增一筆moePost資料(map);
-	}
-
-	/**
-	 * 確保不要檔名重覆去蓋到
-	 * @param fileName
-	 * @return
-	 */
-	public File checkFile(String fileName) {
-		for (int i = 0; i <= 50; i++) {
-			String append = i < 1 ? "" : String.format("%03d", i);// i=0時fileName不變，其它的時候帶i的值
-			File f = new File("e:/moe/post", fileName + append + ".zip");
-			if (!f.exists()) {
-				return f;
-			}
-		}
-		return null;
 	}
 
 	public boolean 確認是否已存在(HashMap map) {
@@ -156,53 +132,20 @@ public class 萌妹 {
 			String filePath = (String) map.get("file_path");
 			String title3 = (String) map.get("title3");
 			Integer postid = (Integer) map.get("postid");
-			if (postid > 2810) {// 因為有好幾批下載，會有檔名重覆的問題，所以以postid區間來當成重新命名的依據
+			if (postid > 500) {// 因為有好幾批下載，會有檔名重覆的問題，所以以postid區間來當成重新命名的依據
 				continue;
 			}
 
 			if (StringUtils.isNotBlank(title3)) {
-				title3 = 處理檔名(title3);
+				title3 = 共用.處理檔名(title3);
 				File f = new File(filePath);
-				File newFile = checkFile(title3);
+				File newFile = 共用.checkFile(fileSavePath, title3);
 				if (f.exists() && !newFile.exists()) {// 舊檔存在，新檔不存在
 					f.renameTo(newFile);
 					System.out.println("" + newFile + "--" + f);
 				}
 			}
 		}
-	}
-
-	/**
-	 * 處理window不合法的檔名成全型
-	 * @param s
-	 * @return
-	 */
-	public String 處理檔名(String s) {
-		s = s.replaceAll("`", "‘");
-		s = s.replaceAll("~", "～");
-		s = s.replaceAll("!", "！");
-		s = s.replaceAll("@", "＠");
-		s = s.replaceAll("#", "＃");
-		s = s.replaceAll("\\$", "＄");
-		s = s.replaceAll("%", "％");
-		s = s.replaceAll("\\^", "︿");
-		s = s.replaceAll("&", "＆");
-		s = s.replaceAll("\\*", "＊");
-		s = s.replaceAll("\\{", "｛");
-		s = s.replaceAll("\\}", "｝");
-		s = s.replaceAll("\\|", "｜");
-		s = s.replaceAll("\\\\", "＼");
-		s = s.replaceAll(":", "：");
-		s = s.replaceAll(";", "；");
-		s = s.replaceAll("\"", "”");
-		s = s.replaceAll("'", "’");
-		s = s.replaceAll("<", "＜");
-		s = s.replaceAll(">", "＞");
-		s = s.replaceAll("\\?", "？");
-		s = s.replaceAll(",", "，");
-		// s=s.replaceAll("\\.", "．");
-		s = s.replaceAll("/", "／");
-		return s;
 	}
 
 }

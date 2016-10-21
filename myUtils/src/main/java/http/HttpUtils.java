@@ -35,22 +35,47 @@ public class HttpUtils {
 
 	}
 
-	public void cookiesHttpTry(String url, File outFile, int tryCount) {
+	public static void httpTry(String url, File outFile, int tryCount) {
+		if (outFile.exists()) {
+			throw new RuntimeException("重覆的檔案下載:" + outFile);
+		}
 		for (int i = 0; i < tryCount; i++) {
 			try {
-				System.out.println("send request time:"+new Date());
+				System.out.println("send request time:" + new Date());
+				getHttp(url, outFile);
+				return;
+			} catch (Exception ex) {
+				outFile.delete();
+				System.out.println("send request url:" + url);
+				ex.printStackTrace();
+			}
+		}
+		throw new RuntimeException("超過重試次數:" + url);
+	}
+
+	public void cookiesHttpTry(String url, File outFile, int tryCount) {
+		if (outFile.exists()) {
+			throw new RuntimeException("重覆的檔案下載:" + outFile);
+		}
+
+		for (int i = 0; i < tryCount; i++) {
+			try {
+				System.out.println("send request time:" + new Date());
 				cookiesHttp(url, outFile);
 				return;
 			} catch (Exception ex) {
 				outFile.delete();
-				System.out.println("send request url:"+url);
+				System.out.println("send request url:" + url);
 				ex.printStackTrace();
 			}
 		}
-		throw new RuntimeException("超過重試次數:"+url);
+		throw new RuntimeException("超過重試次數:" + url);
 	}
 
 	public void cookiesHttp(String url, File outFile) throws IOException {
+		if (!outFile.getParentFile().exists()) {
+			outFile.getParentFile().mkdirs();
+		}
 		HttpGet httpget = new HttpGet(url);
 		// 設定config，例如timeout的時間，1000是1秒的意思吧
 		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).setSocketTimeout(1000)
@@ -71,11 +96,6 @@ public class HttpUtils {
 					IOUtils.copy(in, fo);
 					System.out.println("write file ok==" + outFile);
 				}
-				// IOUtils.copy(input, output);
-				// byte[] bs = IOUtils.toByteArray(in);
-				// System.out.println("length=" + bs.length);
-				// FileUtils.writeByteArrayToFile(outFile, bs);
-				// System.out.println("write file ok==" + outFile);
 			}
 			EntityUtils.consume(entity);
 		} catch (Exception ex) {
@@ -108,29 +128,61 @@ public class HttpUtils {
 
 	}
 
-	public static String getHttp(String url) throws Exception {
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		try {
-			HttpGet httpget = new HttpGet(url);
+	/**
+	 * 下檔案用的
+	 * @param url
+	 * @param f
+	 * @throws Exception
+	 */
+	public static void getHttp(String url, File outFile) throws Exception {
+		if (!outFile.getParentFile().exists()) {
+			outFile.getParentFile().mkdirs();
+		}
 
-			// System.out.println("Executing request " + httpget.getRequestLine());
-			// Create a custom response handler
+		try (CloseableHttpClient httpclient = HttpClients.createDefault();) {
+			HttpGet httpget = new HttpGet(url);
 			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 				@Override
 				public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
 					int status = response.getStatusLine().getStatusCode();
-					if (status >= 200 && status < 300) {
-						HttpEntity entity = response.getEntity();
-						return entity != null ? EntityUtils.toString(entity, "utf8") : null;
-					} else {
+					if (!(status >= 200 && status < 300)) {// 成功的status是在200-299？
 						throw new ClientProtocolException("Unexpected response status: " + status);
 					}
+					System.out.println("entity=" + response.getEntity());
+					try (InputStream in = response.getEntity().getContent();
+							FileOutputStream fo = new FileOutputStream(outFile)) {
+						IOUtils.copy(in, fo);
+						System.out.println("write file ok==" + outFile);
+					}
+					return null;
+				}
+			};
+			httpclient.execute(httpget, responseHandler);
+		}
+	}
+
+	/**
+	 * 下載純文字檔在用的
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getHttp(String url) throws Exception {
+		try (CloseableHttpClient httpclient = HttpClients.createDefault();) {
+			HttpGet httpget = new HttpGet(url);
+			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+				@Override
+				public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+					int status = response.getStatusLine().getStatusCode();
+					if (!(status >= 200 && status < 300)) {
+						throw new ClientProtocolException("Unexpected response status: " + status);
+					}
+					HttpEntity entity = response.getEntity();
+					return entity != null ? EntityUtils.toString(entity, "utf8") : null;
 				}
 			};
 			String responseBody = httpclient.execute(httpget, responseHandler);
 			return responseBody;
-		} finally {
-			httpclient.close();
 		}
 	}
 

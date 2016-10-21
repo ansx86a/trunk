@@ -8,5 +8,11 @@ public interface ISqlDao {
 
 	void 新增一筆moePost資料(HashMap map);
 
+	void 新增一筆紳士comic資料(HashMap map);
+
+	void 更新紳士comic資料(HashMap map);
+
 	List<HashMap> 撈取moePost資料(HashMap map);
+
+	List<HashMap> 撈取紳士comic資料(HashMap map);
 }

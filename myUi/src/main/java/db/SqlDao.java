@@ -26,20 +26,6 @@ public class SqlDao {
 		dao.撈取moePost資料(map);
 	}
 
-	public void test() {
-		try (SqlSession session = sqlSessionFactory.openSession()) {
-			ISqlDao mapper = session.getMapper(ISqlDao.class);
-			int test = mapper.test();
-			System.out.println(test);
-			test = mapper.test();
-			System.out.println(test);
-			test = mapper.test();
-			System.out.println(test);
-			test = mapper.test();
-			System.out.println(test);
-		}
-	}
-
 	public List<HashMap> 撈取moePost資料(HashMap map) {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			ISqlDao mapper = session.getMapper(ISqlDao.class);
@@ -54,9 +40,34 @@ public class SqlDao {
 			ISqlDao mapper = session.getMapper(ISqlDao.class);
 			mapper.新增一筆moePost資料(map);
 			session.commit();
-			// System.out.println("insert ok:" + map);
 		}
 	}
+
+	public List<HashMap> 撈取紳士comic資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			List<HashMap> list = mapper.撈取紳士comic資料(map);
+			return list;
+			// System.out.println("result=" + list);
+		}
+	}
+
+	public void 新增一筆紳士comic資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.新增一筆紳士comic資料(map);
+			session.commit();
+		}
+	}
+	
+	public void 	更新紳士comic資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.更新紳士comic資料(map);
+			session.commit();
+		}
+	}
+
 
 	/**
 	 * 初始化，每個物件固定一個sqlSessionFactory
