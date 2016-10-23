@@ -45,11 +45,11 @@ public class 字幕編碼轉換 {
 		}
 
 		for (File sub : f.listFiles()) {
-			if (!sub.getName().endsWith(".ass")) {
+			if (!sub.getName().endsWith(".ass") && !sub.getName().endsWith(".ssa")) {
 				continue;
 			}
 			String s = FileUtils.readFileToString(sub, oEnc);
-			File newFile = f.toPath().resolve("bak").resolve(sub.getName()).toFile();
+			File newFile = f.toPath().resolve("ok").resolve(sub.getName()).toFile();
 			FileUtils.write(newFile, s, toEnc);
 		}
 	}

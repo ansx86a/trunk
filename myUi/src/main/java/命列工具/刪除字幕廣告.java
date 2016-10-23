@@ -13,7 +13,8 @@ import utils.剪貼簿;
 
 public class 刪除字幕廣告 {
 
-	String[] deleteStr = new String[] { "後期:風一樣的人","后期:风一样的人","被風早同學萌倒的","翻譯 阿虛","人員表 翻譯" ,",banner;"};
+	String[] deleteStr = new String[] { ",Warning,", ",banner;" };
+	String encode = "utf16";
 
 	public static void main(String[] args) {
 		System.out.println("刪除字幕廣告 start");
@@ -45,15 +46,17 @@ public class 刪除字幕廣告 {
 			if (!sub.getName().endsWith(".ass")) {
 				continue;
 			}
+			System.out.println("處理檔案：" + sub.getName());
 			List<String> newList = new ArrayList<>();
 			boolean writeFlag = false;
-			for (String s : FileUtils.readLines(sub)) {
+			for (String s : FileUtils.readLines(sub, encode)) {
 				if (StringUtils.containsAny(s, deleteStr)) {
 					writeFlag = true;
 					continue;
 				}
 				newList.add(s);
 			}
+			System.out.println("writeFlag：" + writeFlag);
 			if (writeFlag) {
 				System.out.println(sub);
 				FileUtils.writeLines(sub, newList);
