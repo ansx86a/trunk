@@ -34,7 +34,7 @@ public class 紳士漫畫 {
 		}
 	}
 
-	private 爬蟲type t = 爬蟲type.單行本;
+	private 爬蟲type t = 爬蟲type.同人和cosplay;
 	private String fileSavePath = "e:/moe/hcomic";
 	private int[] skipComic = new int[] {};
 	private String type = t.toString();// 1:單行本2:雜誌3同人&cosplay
@@ -109,10 +109,10 @@ public class 紳士漫畫 {
 		for (Element o : es) {
 			String title = o.select("p.title_name").get(0).text();
 			System.out.println(title);
-//			if (title.equals("[Pつssy汉化组-062] (C86) [H.B.A (うさぎなごむ)] 搾り魔女 (オリジナル)")) {
-//				System.out.println(title);
-//				continue;
-//			}
+			// if (title.equals("[Pつssy汉化组-062] (C86) [H.B.A (うさぎなごむ)] 搾り魔女 (オリジナル)")) {
+			// System.out.println(title);
+			// continue;
+			// }
 
 			String uriPath = o.select("a.comic_list_view").get(0).attr("href");
 			URI absUri = uri.resolve(uriPath);
@@ -182,7 +182,14 @@ public class 紳士漫畫 {
 					SqlDao.get().更新紳士comic資料(o); // 更新db為下載完成
 					System.out.println("更新db ok:" + o);
 				} catch (Exception ex) {
-					throw new RuntimeException(ex);
+					String exStr = ex.toString() + ("\r\n" + o.toString());
+					// throw new RuntimeException(ex);
+					File outFile = new File(fileSavePath, "comicError_" + o.get("comicid") + ".txt");
+					try {
+						FileUtils.write(outFile, exStr);
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
 				}
 			});
 

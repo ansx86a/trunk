@@ -69,7 +69,7 @@
 			<if test="url != null">and url = #{url,jdbcType=NVARCHAR}</if>
 			<if test="absurl != null">and absurl = #{absurl,jdbcType=NVARCHAR}</if>
 			<if test="file_path != null">and file_path =#{file_path,jdbcType=NVARCHAR}</if>
-			<if test="downloaded != null">and downloaded =#{downloaded,jdbcType=NVARCHAR}</if>
+			<if test="downloaded != null">and downloaded =#{downloaded,jdbcType=INTEGER}</if>
 			<if test="type != null">and type =#{type,jdbcType=NVARCHAR}</if>
 		</where>
 	</select>
@@ -81,10 +81,43 @@
 			<if test="url != null">url = #{url,jdbcType=NVARCHAR},</if>
 			<if test="absurl != null">absurl = #{absurl,jdbcType=NVARCHAR},</if>
 			<if test="file_path != null">file_path =#{file_path,jdbcType=NVARCHAR},</if>
-			<if test="downloaded != null">downloaded =#{downloaded,jdbcType=NVARCHAR},</if>
+			<if test="downloaded != null">downloaded =#{downloaded,jdbcType=INTEGER},</if>
 			<if test="type != null">type =#{type,jdbcType=NVARCHAR},</if>
 		</set>
 		where comicid=#{comicid}
 	</update>
 
+	<select id="撈取ex資料" resultType="map">
+		select * from exPool
+		<where>
+			<if test="exid != null">and exid = #{exid,jdbcType=INTEGER}</if>
+			<if test="title1 != null">and title1 = #{title1,jdbcType=NVARCHAR}</if>
+			<if test="url != null">and url = #{url,jdbcType=NVARCHAR}</if>
+			<if test="downloaded != null">and downloaded =#{downloaded,jdbcType=INTEGER}</if>
+			<if test="looked != null">and looked =#{looked,jdbcType=INTEGER}</if>
+		</where>
+	</select>
+	<insert id="新增一筆ex資料" parameterType="map">
+		insert into exPool
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="exid != null"> exid,</if>
+			<if test="title1 != null">title1,</if>
+			<if test="url != null">url,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="exid != null"> #{exid,jdbcType=INTEGER},	</if>
+			<if test="title1 != null">#{title1,jdbcType=NVARCHAR},	</if>
+			<if test="url != null">#{url,jdbcType=NVARCHAR},</if>
+		</trim>
+	</insert>
+	<update id="更新ex資料">
+		update exPool
+		<set>
+			<if test="title1 != null">title1 = #{title1,jdbcType=NVARCHAR},</if>
+			<if test="url != null">url = #{url,jdbcType=NVARCHAR},</if>
+			<if test="downloaded != null">downloaded =#{downloaded,jdbcType=INTEGER},</if>
+			<if test="looked != null">looked =#{looked,jdbcType=NVARCHAR},</if>
+		</set>
+		where exid=#{exid}
+	</update>
 </mapper>

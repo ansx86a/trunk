@@ -52,6 +52,14 @@ public class SqlDao {
 		}
 	}
 
+	public List<HashMap> 撈取ex資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			List<HashMap> list = mapper.撈取ex資料(map);
+			return list;
+		}
+	}
+
 	public void 新增一筆紳士comic資料(HashMap map) {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			ISqlDao mapper = session.getMapper(ISqlDao.class);
@@ -59,8 +67,16 @@ public class SqlDao {
 			session.commit();
 		}
 	}
-	
-	public void 	更新紳士comic資料(HashMap map) {
+
+	public void 新增一筆ex資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.新增一筆ex資料(map);
+			session.commit();
+		}
+	}
+
+	public void 更新紳士comic資料(HashMap map) {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			ISqlDao mapper = session.getMapper(ISqlDao.class);
 			mapper.更新紳士comic資料(map);
@@ -68,6 +84,13 @@ public class SqlDao {
 		}
 	}
 
+	public void 更新ex資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.更新ex資料(map);
+			session.commit();
+		}
+	}
 
 	/**
 	 * 初始化，每個物件固定一個sqlSessionFactory
