@@ -12,9 +12,13 @@ public interface ISqlDao {
 
 	void 新增一筆ex資料(HashMap map);
 
+	void 新增一筆excache資料(HashMap map);
+
 	void 更新紳士comic資料(HashMap map);
 
 	void 更新ex資料(HashMap map);
+
+	void 更新excache資料(HashMap map);
 
 	List<HashMap> 撈取moePost資料(HashMap map);
 
@@ -22,4 +26,5 @@ public interface ISqlDao {
 
 	List<HashMap> 撈取ex資料(HashMap map);
 
+	List<HashMap> 撈取excache資料(HashMap map);
 }

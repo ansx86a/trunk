@@ -120,4 +120,43 @@
 		</set>
 		where exid=#{exid}
 	</update>
+
+	<select id="撈取excache資料" resultType="map">
+		select * from exCache
+		<where>
+			<if test="exid != null">and exid = #{exid,jdbcType=INTEGER}</if>
+			<if test="pageurl != null">and pageurl = #{pageurl,jdbcType=NVARCHAR}</if>
+			<if test="imgurl != null">and imgurl = #{imgurl,jdbcType=NVARCHAR}</if>
+			<if test="info != null">and info = #{info,jdbcType=NVARCHAR}</if>
+			<if test="fail != null">and fail = #{fail,jdbcType=NVARCHAR}</if>
+			<if test="downloaded != null">and downloaded =#{downloaded,jdbcType=INTEGER}</if>
+		</where>
+	</select>
+	<insert id="新增一筆excache資料" parameterType="map">
+		insert into exCache
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="exid != null"> exid,</if>
+			<if test="pageurl != null">pageurl,</if>
+			<if test="imgurl != null">imgurl,</if>
+			<if test="info != null">info,</if>
+			<if test="fail != null">fail,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="exid != null"> #{exid,jdbcType=INTEGER},	</if>
+			<if test="pageurl != null">#{pageurl,jdbcType=NVARCHAR},	</if>
+			<if test="imgurl != null">#{imgurl,jdbcType=NVARCHAR},</if>
+			<if test="info != null">#{info,jdbcType=NVARCHAR},</if>
+			<if test="fail != null">#{fail,jdbcType=NVARCHAR},</if>
+		</trim>
+	</insert>
+	<update id="更新excache資料">
+		update exCache
+		<set>
+			<if test="downloaded != null">downloaded =#{downloaded,jdbcType=INTEGER},</if>
+		</set>
+		where exid=#{exid} and pageurl = #{pageurl}
+	</update>
+
+
+
 </mapper>

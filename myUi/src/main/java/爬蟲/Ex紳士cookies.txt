@@ -1,7 +1,7 @@
 
 {
     "domain": ".exhentai.org",
-    "expirationDate": 1509939140.823497,
+    "expirationDate": 1509939304.279241,
     "hostOnly": false,
     "httpOnly": false,
     "name": "hath_perks",
@@ -71,7 +71,7 @@
 },
 {
     "domain": ".exhentai.org",
-    "expirationDate": 1509939222.669244,
+    "expirationDate": 1510063433.08547,
     "hostOnly": false,
     "httpOnly": false,
     "name": "uconfig",
@@ -85,7 +85,7 @@
 },
 {
     "domain": "exhentai.org",
-    "expirationDate": 1509939222.669373,
+    "expirationDate": 1510063433.085608,
     "hostOnly": true,
     "httpOnly": false,
     "name": "lv",
@@ -94,6 +94,6 @@
     "secure": false,
     "session": false,
     "storeId": "0",
-    "value": "1478375920-1478403206",
+    "value": "1478450033-1478527415",
     "id": 7
 }

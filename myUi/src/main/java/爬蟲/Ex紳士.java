@@ -23,20 +23,15 @@ import db.SqlDao;
 public class Ex紳士 {
 
 	enum Extype {
-		爬蟲("1"), 捉圖("2");
-		String value;
-
-		Extype(String value) {
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return this.value;
-		}
+		爬蟲, 捉圖;
 	}
 
-	private Extype type = Extype.爬蟲;
+	enum DownloadMode {
+		重新下載, 接下去下載
+	}
+
+	private Extype type = Extype.捉圖;
+	private DownloadMode downloadMode = DownloadMode.接下去下載;
 	private HttpUtils h = new HttpUtils();
 	// 檔案相關
 	private String fileSavePath = "e:/moe/ex";
@@ -45,22 +40,25 @@ public class Ex紳士 {
 
 	// 同步操作相關
 	public static Object obj = new Object();
-	private long 時間間隔 = 4_000;
+	private long 時間間隔 = 2_000;
 	public Date d = new Date(System.currentTimeMillis() + 時間間隔);
 	public Random rand = new Random();
 
 	public static void main(String[] args) throws Exception {
 		// 設定可並行的管線數目，設x就程示同時跑x+1個，不用參數的話要研究ForkJoinPool，太麻煩了
-		System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "2");
+		System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
 
 		Ex紳士 ex = new Ex紳士();
 		ex.init();
 		if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
-			for (int i = 100; i < 120; i++) {
-				String url = "https://exhentai.org/?page=" + i+"&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+			for (int i = 100; i < 150; i++) {
+				String url = "https://exhentai.org/?page=" + i
+						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+				System.out.println(url);
 				ex.讀取文章列表(url);
 				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
 			}
+			System.out.println("end");
 			return;
 		}
 		if (ex.type == Extype.捉圖) {
@@ -89,6 +87,7 @@ public class Ex紳士 {
 				ex.outDir = 共用.checkFile(ex.fileSavePath, dir, "");
 				System.out.println(ex.outDir);
 				ex.圖檔列表頁面(nextUrl);
+
 				HashMap updateMap = new HashMap();
 				updateMap.put("downloaded", "1");
 				updateMap.put("exid", m.get("exid"));
@@ -115,12 +114,14 @@ public class Ex紳士 {
 			map.put("exid", exid);
 			map.put("title1", title);
 			map.put("url", nextUrl);
-			System.out.print(map);
+
 			List<HashMap> list = SqlDao.get().撈取ex資料(map);
 			if (list.size() > 0) {
-				System.out.println("------已經存在了");
+				System.out.print("------已經存在了");
+				System.out.println(map);
 			} else {
-				System.out.println("inserting");
+				System.out.print("inserting");
+				System.out.println(map);
 				SqlDao.get().新增一筆ex資料(map);
 			}
 		}
@@ -165,7 +166,10 @@ public class Ex紳士 {
 			System.out.println("imgUrl=" + imgUrl);
 			System.out.println("page = " + page);
 			try {
-				圖檔頁(imgUrl, page);
+				boolean saveOk = 圖檔頁(imgUrl, page);
+				if (saveOk && downloadMode == DownloadMode.接下去下載) {
+
+				}
 			} catch (Exception ex) {
 				System.out.println("管線操作發生ex");
 				ex.printStackTrace();
@@ -185,9 +189,50 @@ public class Ex紳士 {
 		}
 	}
 
-	public void 圖檔頁(String imgUrl, String page) throws Exception {
+	/**
+	 * 
+	 * @param imgUrl
+	 * @param page
+	 * @param isUseCache 預設帶0，有發現cache會變成1，重作1次沒有快取帶2
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean 圖檔頁(String imgUrl, String page) throws Exception {
+		String exid = "" + row.get("exid");
+		HashMap cacheMap = new HashMap();
+		cacheMap.put("exid", exid);
+		cacheMap.put("pageurl", imgUrl);
 		String newPage = String.format("%05d", Integer.parseInt(page));
-		String result = "";
+		String imgSrc = "";
+		String info = "";
+		String fail = "";
+
+		if (StringUtils.isBlank(imgSrc)) {// 沒有從快取捉到要用的值，就從網頁去捉
+			String html = 取得圖檔頁資訊(imgUrl, page);
+			if (StringUtils.isBlank(html)) {// 捉不到圖檔頁的html，就無法執行，就跳開
+				return false;
+			}
+			Document doc = Jsoup.parse(html);
+			imgSrc = doc.select("#i3 img").attr("src");
+			info = doc.select("#i4").text();
+			fail = doc.select("#loadfail").attr("onclick");
+			fail = StringUtils.substringBefore(StringUtils.substringAfter(fail, "'"), "'");
+			System.out.println(imgSrc);
+			System.out.println(info);
+		}
+		boolean saveFlag = 存圖檔(imgUrl, imgSrc, page, newPage, info, fail);
+		return saveFlag;
+	}
+
+	/**
+	 * 解析出圖檔頁的html來
+	 * @param imgUrl
+	 * @param page
+	 * @return
+	 * @throws IOException
+	 */
+	public String 取得圖檔頁資訊(String imgUrl, String page) throws IOException {
+		String result = null;
 		for (int i = 0; i < 5; i++) {
 			try {
 				doThreadSleep();
@@ -197,22 +242,36 @@ public class Ex紳士 {
 				ex.printStackTrace();
 			}
 		}
-		if (result == "") {
+		if (StringUtils.isBlank(result)) {
 			String newLog = outDir.getAbsolutePath() + "pageError_" + page + "_" + new Date().getTime() / 1000 % 3600
 					+ ".txt";
 			File newLogFile = new File(newLog);
 			String log = "" + row.get("url") + "\r\n" + imgUrl;
 			FileUtils.writeStringToFile(newLogFile, log);
-			return;
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param imgUrl
+	 * @param imgSrc
+	 * @param page
+	 * @param newPage
+	 * @param info
+	 * @param fail
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean 存圖檔(String imgUrl, String imgSrc, String page, String newPage, String info, String fail)
+			throws Exception {
+		HashMap cacheMap = new HashMap();
+		cacheMap.put("pageurl", imgUrl);
+		cacheMap.put("exid", row.get("exid"));
+		if (downloadMode == DownloadMode.接下去下載) {// 如果已有儲存下存的時候，就return false不載圖了
+			
 		}
 
-		Document doc = Jsoup.parse(result);
-		String imgSrc = doc.select("#i3 img").attr("src");
-		String info = doc.select("#i4").text();
-		String fail = doc.select("#loadfail").attr("onclick");
-		fail = StringUtils.substringBefore(StringUtils.substringAfter(fail, "'"), "'");
-		System.out.println(imgSrc);
-		System.out.println(info);
 		// 存圖檔
 		File outFile = 共用.checkFile(outDir.getAbsolutePath(),
 				newPage + "_" + StringUtils.substringAfterLast(imgSrc, "/"), "");
@@ -221,24 +280,24 @@ public class Ex紳士 {
 			HttpUtils.httpTry(imgSrc, outFile, 1);
 		} catch (Exception ex) {
 			if (imgUrl.indexOf("?nl=") < 0) {
-				圖檔頁(imgUrl + "?nl=" + fail, page);
-				return;
+				return 圖檔頁(imgUrl + "?nl=" + fail, page);
 			}
-
 			String newLog = outDir.getAbsolutePath() + "imgError_" + StringUtils.substringAfterLast(imgSrc, "/") + "_"
 					+ new Date().getTime() / 1000 % 3600 + ".txt";
 			File newLogFile = new File(newLog);
 			String log = "" + row.get("url") + "\r\n" + info + "\r\n" + imgSrc;
 			FileUtils.writeStringToFile(newLogFile, log);
+			return false;
 		}
+		return true;
 	}
 
 	public void doThreadSleep() throws Exception {
 		while (true) {
-			//System.out.println(Thread.currentThread().getId() + "-" + new Date(System.currentTimeMillis()));
+			// System.out.println(Thread.currentThread().getId() + "-" + new Date(System.currentTimeMillis()));
 			synchronized (obj) {
 				if (System.currentTimeMillis() - d.getTime() > 0) {
-					d = new Date(System.currentTimeMillis() + 時間間隔 - 1_000 + rand.nextInt(2000));// 弄亂時間差
+					d = new Date(System.currentTimeMillis() + 時間間隔 - 500 + rand.nextInt(1000));// 弄亂時間差
 					System.out.println("下一次可執行時間" + Thread.currentThread().getId() + "-" + d);
 					break;
 				}
