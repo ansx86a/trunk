@@ -71,7 +71,7 @@
 },
 {
     "domain": ".exhentai.org",
-    "expirationDate": 1510063433.08547,
+    "expirationDate": 1510226137.633424,
     "hostOnly": false,
     "httpOnly": false,
     "name": "uconfig",
@@ -80,12 +80,12 @@
     "secure": false,
     "session": false,
     "storeId": "0",
-    "value": "uh_y-lt_m-tl_j-oi_e68f4d-tr_5-ts_l-dm_l-ar_0-xns_0-xl_1x1025x2049x20x1044x2068x30x1054x2078x40x1064x2088x50x1074x2098x60x1084x2108x1094x2118x80x1104x2128x90x1114x2138x100x1124x2148x110x1134x2158x120x1144x2168x130x1154x2178x255x1279x2303-rc_0-rx_0-ry_0-ms_n-mt_n-cs_a-fs_p-to_a-pn_1-sc_0-ru_rrggb-xr_a-cats_0-prn_y-sa_y-qb_n-tf_n-hh_-hp_-hk_",
+    "value": "tl_j-oi_e68f4d-tr_5-ts_l-xl_1x1025x2049x20x1044x2068x30x1054x2078x40x1064x2088x50x1074x2098x60x1084x2108x1094x2118x80x1104x2128x90x1114x2138x100x1124x2148x110x1134x2158x120x1144x2168x130x1154x2178x255x1279x2303-pn_1",
     "id": 6
 },
 {
     "domain": "exhentai.org",
-    "expirationDate": 1510063433.085608,
+    "expirationDate": 1510309082.089963,
     "hostOnly": true,
     "httpOnly": false,
     "name": "lv",
@@ -94,6 +94,6 @@
     "secure": false,
     "session": false,
     "storeId": "0",
-    "value": "1478450033-1478527415",
+    "value": "1478691598-1478773063",
     "id": 7
 }

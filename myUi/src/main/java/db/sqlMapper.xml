@@ -10,8 +10,8 @@
 			<if test="postid != null">and postid = #{postid,jdbcType=INTEGER}	</if>
 			<if test="title1 != null">and title1 = #{title1,jdbcType=NVARCHAR}</if>
 			<if test="title2 != null">and title2 = #{title2,jdbcType=NVARCHAR}</if>
-			<if test="url != null">and url = #{url,jdbcType=NVARCHAR}</if>
-			<if test="absurl != null">and absurl = #{absurl,jdbcType=NVARCHAR}</if>
+			<if test="url != null">and url = #{url,jdbcType=VARCHAR}</if>
+			<if test="absurl != null">and absurl = #{absurl,jdbcType=VARCHAR}</if>
 			<if test="file_path != null">and file_path =#{file_path,jdbcType=NVARCHAR}</if>
 		</where>
 	</select>
@@ -32,11 +32,11 @@
 			<if test="postid != null"> #{postid,jdbcType=INTEGER},	</if>
 			<if test="title1 != null">#{title1,jdbcType=NVARCHAR},	</if>
 			<if test="title2 != null">#{title2,jdbcType=NVARCHAR},	</if>
-			<if test="url != null">#{url,jdbcType=NVARCHAR},</if>
-			<if test="absurl != null"> #{absurl,jdbcType=NVARCHAR},</if>
+			<if test="url != null">#{url,jdbcType=VARCHAR},</if>
+			<if test="absurl != null"> #{absurl,jdbcType=VARCHAR},</if>
 			<if test="file_path != null">#{file_path,jdbcType=NVARCHAR},</if>
-			<if test="download != null">#{download,jdbcType=NVARCHAR},</if>
-			<if test="absdownload != null">#{absdownload,jdbcType=NVARCHAR},</if>
+			<if test="download != null">#{download,jdbcType=INTEGER},</if>
+			<if test="absdownload != null">#{absdownload,jdbcType=VARCHAR},</if>
 		</trim>
 	</insert>
 
@@ -54,11 +54,11 @@
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="comicid != null"> #{comicid,jdbcType=INTEGER},	</if>
 			<if test="title1 != null">#{title1,jdbcType=NVARCHAR},	</if>
-			<if test="url != null">#{url,jdbcType=NVARCHAR},</if>
-			<if test="absurl != null"> #{absurl,jdbcType=NVARCHAR},</if>
+			<if test="url != null">#{url,jdbcType=VARCHAR},</if>
+			<if test="absurl != null"> #{absurl,jdbcType=VARCHAR},</if>
 			<if test="file_path != null">#{file_path,jdbcType=NVARCHAR},</if>
-			<if test="absdownload != null">#{absdownload,jdbcType=NVARCHAR},</if>
-			<if test="type != null">#{type,jdbcType=NVARCHAR},</if>
+			<if test="absdownload != null">#{absdownload,jdbcType=VARCHAR},</if>
+			<if test="type != null">#{type,jdbcType=INTEGER},</if>
 		</trim>
 	</insert>
 	<select id="撈取紳士comic資料" resultType="map">
@@ -66,11 +66,11 @@
 		<where>
 			<if test="comicid != null">and comicid = #{comicid,jdbcType=INTEGER}</if>
 			<if test="title1 != null">and title1 = #{title1,jdbcType=NVARCHAR}</if>
-			<if test="url != null">and url = #{url,jdbcType=NVARCHAR}</if>
-			<if test="absurl != null">and absurl = #{absurl,jdbcType=NVARCHAR}</if>
+			<if test="url != null">and url = #{url,jdbcType=VARCHAR}</if>
+			<if test="absurl != null">and absurl = #{absurl,jdbcType=VARCHAR}</if>
 			<if test="file_path != null">and file_path =#{file_path,jdbcType=NVARCHAR}</if>
 			<if test="downloaded != null">and downloaded =#{downloaded,jdbcType=INTEGER}</if>
-			<if test="type != null">and type =#{type,jdbcType=NVARCHAR}</if>
+			<if test="type != null">and type =#{type,jdbcType=INTEGER}</if>
 		</where>
 	</select>
 
@@ -78,11 +78,11 @@
 		update hcomicPool
 		<set>
 			<if test="title1 != null">title1 = #{title1,jdbcType=NVARCHAR},</if>
-			<if test="url != null">url = #{url,jdbcType=NVARCHAR},</if>
-			<if test="absurl != null">absurl = #{absurl,jdbcType=NVARCHAR},</if>
+			<if test="url != null">url = #{url,jdbcType=VARCHAR},</if>
+			<if test="absurl != null">absurl = #{absurl,jdbcType=VARCHAR},</if>
 			<if test="file_path != null">file_path =#{file_path,jdbcType=NVARCHAR},</if>
 			<if test="downloaded != null">downloaded =#{downloaded,jdbcType=INTEGER},</if>
-			<if test="type != null">type =#{type,jdbcType=NVARCHAR},</if>
+			<if test="type != null">type =#{type,jdbcType=INTEGER},</if>
 		</set>
 		where comicid=#{comicid}
 	</update>
@@ -92,7 +92,7 @@
 		<where>
 			<if test="exid != null">and exid = #{exid,jdbcType=INTEGER}</if>
 			<if test="title1 != null">and title1 = #{title1,jdbcType=NVARCHAR}</if>
-			<if test="url != null">and url = #{url,jdbcType=NVARCHAR}</if>
+			<if test="url != null">and url = #{url,jdbcType=VARCHAR}</if>
 			<if test="downloaded != null">and downloaded =#{downloaded,jdbcType=INTEGER}</if>
 			<if test="looked != null">and looked =#{looked,jdbcType=INTEGER}</if>
 		</where>
@@ -107,16 +107,16 @@
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="exid != null"> #{exid,jdbcType=INTEGER},	</if>
 			<if test="title1 != null">#{title1,jdbcType=NVARCHAR},	</if>
-			<if test="url != null">#{url,jdbcType=NVARCHAR},</if>
+			<if test="url != null">#{url,jdbcType=VARCHAR},</if>
 		</trim>
 	</insert>
 	<update id="更新ex資料">
 		update exPool
 		<set>
 			<if test="title1 != null">title1 = #{title1,jdbcType=NVARCHAR},</if>
-			<if test="url != null">url = #{url,jdbcType=NVARCHAR},</if>
+			<if test="url != null">url = #{url,jdbcType=VARCHAR},</if>
 			<if test="downloaded != null">downloaded =#{downloaded,jdbcType=INTEGER},</if>
-			<if test="looked != null">looked =#{looked,jdbcType=NVARCHAR},</if>
+			<if test="looked != null">looked =#{looked,jdbcType=INTEGER},</if>
 		</set>
 		where exid=#{exid}
 	</update>
@@ -125,10 +125,10 @@
 		select * from exCache
 		<where>
 			<if test="exid != null">and exid = #{exid,jdbcType=INTEGER}</if>
-			<if test="pageurl != null">and pageurl = #{pageurl,jdbcType=NVARCHAR}</if>
-			<if test="imgurl != null">and imgurl = #{imgurl,jdbcType=NVARCHAR}</if>
+			<if test="pageurl != null">and pageurl = #{pageurl,jdbcType=VARCHAR}</if>
+			<if test="imgurl != null">and imgurl = #{imgurl,jdbcType=VARCHAR}</if>
 			<if test="info != null">and info = #{info,jdbcType=NVARCHAR}</if>
-			<if test="fail != null">and fail = #{fail,jdbcType=NVARCHAR}</if>
+			<if test="fail != null">and fail = #{fail,jdbcType=VARCHAR}</if>
 			<if test="downloaded != null">and downloaded =#{downloaded,jdbcType=INTEGER}</if>
 		</where>
 	</select>
@@ -143,10 +143,10 @@
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="exid != null"> #{exid,jdbcType=INTEGER},	</if>
-			<if test="pageurl != null">#{pageurl,jdbcType=NVARCHAR},	</if>
-			<if test="imgurl != null">#{imgurl,jdbcType=NVARCHAR},</if>
+			<if test="pageurl != null">#{pageurl,jdbcType=VARCHAR},	</if>
+			<if test="imgurl != null">#{imgurl,jdbcType=VARCHAR},</if>
 			<if test="info != null">#{info,jdbcType=NVARCHAR},</if>
-			<if test="fail != null">#{fail,jdbcType=NVARCHAR},</if>
+			<if test="fail != null">#{fail,jdbcType=VARCHAR},</if>
 		</trim>
 	</insert>
 	<update id="更新excache資料">

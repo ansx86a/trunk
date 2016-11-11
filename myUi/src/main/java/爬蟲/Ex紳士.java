@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,7 +31,7 @@ public class Ex紳士 {
 		重新下載, 接下去下載
 	}
 
-	private Extype type = Extype.捉圖;
+	private Extype type = Extype.爬蟲;
 	private DownloadMode downloadMode = DownloadMode.接下去下載;
 	private HttpUtils h = new HttpUtils();
 	// 檔案相關
@@ -44,6 +45,8 @@ public class Ex紳士 {
 	public Date d = new Date(System.currentTimeMillis() + 時間間隔);
 	public Random rand = new Random();
 
+	public Date stopDate = DateUtils.addMinutes(new Date(), 1 * 60 * 24);// 多久停止
+
 	public static void main(String[] args) throws Exception {
 		// 設定可並行的管線數目，設x就程示同時跑x+1個，不用參數的話要研究ForkJoinPool，太麻煩了
 		System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
@@ -51,13 +54,20 @@ public class Ex紳士 {
 		Ex紳士 ex = new Ex紳士();
 		ex.init();
 		if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
-			for (int i = 100; i < 150; i++) {
-				String url = "https://exhentai.org/?page=" + i
-						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-				System.out.println(url);
-				ex.讀取文章列表(url);
-				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-			}
+//			for (int i = 100; i < 110; i++) {
+//				String url = "https://exhentai.org/?page=" + i
+//						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+//				System.out.println(url);
+//				ex.讀取文章列表(url);
+//				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+//			}
+//			for (int i = 200; i < 250; i++) {
+//				String url = "https://exhentai.org/?page=" + i
+//						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+//				System.out.println(url);
+//				ex.讀取文章列表(url);
+//				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+//			}
 			System.out.println("end");
 			return;
 		}
@@ -76,6 +86,11 @@ public class Ex紳士 {
 			// list = list.stream().sorted(c).collect(Collectors.toList());
 			list.sort(c);
 			for (HashMap m : list) {
+				if (ex.stopDate.before(new Date())) {
+					System.out.println("超過執行時間，強制停止");
+					return;
+				}
+
 				System.out.println(m);
 				String nextUrl = m.get("url").toString();
 				if (-1 == (int) m.get("looked")) {// 已經忽略的列表
@@ -92,6 +107,7 @@ public class Ex紳士 {
 				updateMap.put("downloaded", "1");
 				updateMap.put("exid", m.get("exid"));
 				SqlDao.get().更新ex資料(updateMap);
+
 			}
 		}
 	}
@@ -163,12 +179,22 @@ public class Ex紳士 {
 		es.parallelStream().forEach(e -> {
 			String imgUrl = e.attr("href");
 			String page = e.text();
-			System.out.println("imgUrl=" + imgUrl);
-			System.out.println("page = " + page);
+			System.out.println("page = " + page + ",imgUrl=" + imgUrl);
 			try {
-				boolean saveOk = 圖檔頁(imgUrl, page);
-				if (saveOk && downloadMode == DownloadMode.接下去下載) {
-
+				HashMap map = new HashMap();
+				map.put("pageurl", imgUrl);
+				map.put("exid", row.get("exid"));
+				if (downloadMode == DownloadMode.接下去下載) {// 如果已有儲存下存的時候，就return false不載圖了
+					List list = SqlDao.get().撈取excache資料(map);
+					if (list.size() > 0) {
+						System.out.println("發現cache記錄，跳過下載" + map);
+						return;
+					}
+				}
+				boolean saveOk = 圖檔頁(imgUrl, page);// 核心的下載程式
+				if (saveOk && downloadMode == DownloadMode.接下去下載) {// 如果下載成功的話，新增一筆cache記錄
+					SqlDao.get().新增一筆excache資料(map);
+					System.out.println("新增了一筆cache記錄" + map);
 				}
 			} catch (Exception ex) {
 				System.out.println("管線操作發生ex");
@@ -265,12 +291,6 @@ public class Ex紳士 {
 	 */
 	public boolean 存圖檔(String imgUrl, String imgSrc, String page, String newPage, String info, String fail)
 			throws Exception {
-		HashMap cacheMap = new HashMap();
-		cacheMap.put("pageurl", imgUrl);
-		cacheMap.put("exid", row.get("exid"));
-		if (downloadMode == DownloadMode.接下去下載) {// 如果已有儲存下存的時候，就return false不載圖了
-			
-		}
 
 		// 存圖檔
 		File outFile = 共用.checkFile(outDir.getAbsolutePath(),
