@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Date;
 
 import net.sf.json.JSONObject;
@@ -104,6 +105,38 @@ public class HttpUtils {
 		}
 	}
 
+	
+	public byte[] cookiesHttpByte(String url) throws IOException {
+		HttpGet httpget = new HttpGet(url);
+		// 設定config，例如timeout的時間，1000是1秒的意思吧
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).setSocketTimeout(1000)
+				.setConnectTimeout(100000).build();
+		httpget.setConfig(requestConfig);
+
+		try (CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
+				.setDefaultCookieStore(cookieStore).build();
+				CloseableHttpResponse response = httpclient.execute(httpget)) {
+			System.out.println("build ok execute ok");
+			// CloseableHttpResponse response = httpclient.execute(httpget, context);
+
+			HttpEntity entity = response.getEntity();
+			System.out.println("entity=" + entity);
+			// InputStream in = entity.getContent();
+			byte[] bs = null;
+			if (entity != null) {
+				try (InputStream in = entity.getContent(); ) {
+					bs = IOUtils.toByteArray(in);
+				}
+			}
+			EntityUtils.consume(entity);
+			return bs;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+	}
+
+	
 	/**
 	 * 由chrome導出的cookies來建立cookieStore
 	 * @param cookieStr
