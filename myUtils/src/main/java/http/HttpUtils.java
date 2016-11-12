@@ -1,5 +1,6 @@
 package http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -79,8 +80,8 @@ public class HttpUtils {
 		}
 		HttpGet httpget = new HttpGet(url);
 		// 設定config，例如timeout的時間，1000是1秒的意思吧
-		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).setSocketTimeout(1000)
-				.setConnectTimeout(100000).build();
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT)
+				.setSocketTimeout(60_000).setConnectTimeout(50_000).build();
 		httpget.setConfig(requestConfig);
 
 		try (CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
@@ -105,12 +106,11 @@ public class HttpUtils {
 		}
 	}
 
-	
-	public byte[] cookiesHttpByte(String url) throws IOException {
+	public String cookiesHttp(String url) throws IOException {
 		HttpGet httpget = new HttpGet(url);
 		// 設定config，例如timeout的時間，1000是1秒的意思吧
-		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).setSocketTimeout(1000)
-				.setConnectTimeout(100000).build();
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT)
+				.setSocketTimeout(60_000).setConnectTimeout(50_000).build();
 		httpget.setConfig(requestConfig);
 
 		try (CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
@@ -122,21 +122,21 @@ public class HttpUtils {
 			HttpEntity entity = response.getEntity();
 			System.out.println("entity=" + entity);
 			// InputStream in = entity.getContent();
-			byte[] bs = null;
+			String result = null;
 			if (entity != null) {
-				try (InputStream in = entity.getContent(); ) {
-					bs = IOUtils.toByteArray(in);
+				try (InputStream in = entity.getContent(); ByteArrayOutputStream fo = new ByteArrayOutputStream()) {
+					IOUtils.copy(in, fo);
+					result = new String(fo.toByteArray());
 				}
 			}
 			EntityUtils.consume(entity);
-			return bs;
+			return result;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw ex;
 		}
 	}
 
-	
 	/**
 	 * 由chrome導出的cookies來建立cookieStore
 	 * @param cookieStr
@@ -174,6 +174,9 @@ public class HttpUtils {
 
 		try (CloseableHttpClient httpclient = HttpClients.createDefault();) {
 			HttpGet httpget = new HttpGet(url);
+			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(60_000).setConnectTimeout(50_000)
+					.build();
+			httpget.setConfig(requestConfig);
 			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 				@Override
 				public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {

@@ -20,10 +20,9 @@ public class SqlDao {
 		System.out.println(sqlSessionFactory);
 
 		HashMap map = new HashMap();
-		map.put("postid", 2233);
-		// dao.新增一筆moePost資料(map);
-		// dao.test();
-		dao.撈取moePost資料(map);
+		map.put("postid", "981828");
+		map.put("pageurl", "https://exhentai.org/s/d0e6f896a3/981828-32");
+		System.out.println(SqlDao.get().撈取excache資料(map));
 	}
 
 	public List<HashMap> 撈取moePost資料(HashMap map) {
@@ -52,6 +51,22 @@ public class SqlDao {
 		}
 	}
 
+	public List<HashMap> 撈取ex資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			List<HashMap> list = mapper.撈取ex資料(map);
+			return list;
+		}
+	}
+
+	public List<HashMap> 撈取excache資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			List<HashMap> list = mapper.撈取excache資料(map);
+			return list;
+		}
+	}
+
 	public void 新增一筆紳士comic資料(HashMap map) {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			ISqlDao mapper = session.getMapper(ISqlDao.class);
@@ -59,8 +74,24 @@ public class SqlDao {
 			session.commit();
 		}
 	}
-	
-	public void 	更新紳士comic資料(HashMap map) {
+
+	public void 新增一筆ex資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.新增一筆ex資料(map);
+			session.commit();
+		}
+	}
+
+	public void 新增一筆excache資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.新增一筆excache資料(map);
+			session.commit();
+		}
+	}
+
+	public void 更新紳士comic資料(HashMap map) {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			ISqlDao mapper = session.getMapper(ISqlDao.class);
 			mapper.更新紳士comic資料(map);
@@ -68,6 +99,21 @@ public class SqlDao {
 		}
 	}
 
+	public void 更新ex資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.更新ex資料(map);
+			session.commit();
+		}
+	}
+
+	public void 更新excache資料(HashMap map) {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			ISqlDao mapper = session.getMapper(ISqlDao.class);
+			mapper.更新excache資料(map);
+			session.commit();
+		}
+	}
 
 	/**
 	 * 初始化，每個物件固定一個sqlSessionFactory

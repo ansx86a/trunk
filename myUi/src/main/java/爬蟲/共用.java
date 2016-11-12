@@ -39,6 +39,7 @@ public class 共用 {
 		s = s.replaceAll(",", "，");
 		// s=s.replaceAll("\\.", "．");
 		s = s.replaceAll("/", "／");
+		s = s.trim();
 		return s;
 	}
 
@@ -47,22 +48,23 @@ public class 共用 {
 	 * @param fileName
 	 * @return
 	 */
-	public static File checkFile(String filePath, String fileName) {
+	public static File checkFile(String filePath, String fileName, String endStr) {
 		if (fileName.length() > 75) {
-			fileName = fileName.substring(0, 75);
+			fileName = fileName.substring(0, 75).trim();
 		}
 
 		for (int i = 0; i <= 50; i++) {
 			String append = i < 1 ? "" : String.format("%03d", i);// i=0時fileName不變，其它的時候帶i的值
-			File f = new File(filePath, fileName + append + ".zip");
+			File f = new File(filePath, fileName + append + endStr);
 			if (!f.exists()) {
 				return f;
 			}
 		}
 		return null;
 	}
-	
-	
-	
-	
+
+	public static File checkFile(String filePath, String fileName) {
+		return checkFile(filePath, fileName, ".zip");
+	}
+
 }

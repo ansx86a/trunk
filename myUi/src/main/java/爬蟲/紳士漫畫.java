@@ -32,10 +32,9 @@ public class 紳士漫畫 {
 		public String toString() {
 			return this.value;
 		}
-
 	}
 
-	private 爬蟲type t = 爬蟲type.單行本;
+	private 爬蟲type t = 爬蟲type.同人和cosplay;
 	private String fileSavePath = "e:/moe/hcomic";
 	private int[] skipComic = new int[] {};
 	private String type = t.toString();// 1:單行本2:雜誌3同人&cosplay
@@ -48,27 +47,28 @@ public class 紳士漫畫 {
 
 			紳士漫畫 a = new 紳士漫畫();
 			if (a.t == 爬蟲type.單行本) {
-				for (int i = 1; i <= 345; i++) {
+				for (int i = 1; i <= 345; i++) {// 2016/10/31
 					// http://www.wnacg.org/albums-index-page-1-cate-13.html//日文
 					// http://www.wnacg.org/albums-index-page-2-cate-6.html//中日文
 					String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-6.html";
 					a.本子list頁(url);
 				}
-			} else if (a.t == 爬蟲type.雜誌) {
-
+			} else if (a.t == 爬蟲type.雜誌) {// 306//2016/10/31
+				for (int i = 1; i <= 310; i++) {
+					String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-7.html";
+					a.本子list頁(url);
+				}
 			} else if (a.t == 爬蟲type.同人和cosplay) {
+				for (int i = 1250; i <= 1750; i++) {// 1731//2016/10/31
+					String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-5.html";
+					System.out.println(url);
+					a.本子list頁(url);
+				}
 			}
-
-			switch (a.t) {
-			case 單行本:
-				break;
-			case 雜誌:
-				break;
-			}
+			return;
 		}
 		單行本下載: {
 			紳士漫畫 a = new 紳士漫畫();
-			a.type = "1";
 			a.單行本下載();
 		}
 		漫畫自然排序法重新命名: {
@@ -108,6 +108,12 @@ public class 紳士漫畫 {
 		es = doc.select(".search_result_box");
 		for (Element o : es) {
 			String title = o.select("p.title_name").get(0).text();
+			System.out.println(title);
+			// if (title.equals("[Pつssy汉化组-062] (C86) [H.B.A (うさぎなごむ)] 搾り魔女 (オリジナル)")) {
+			// System.out.println(title);
+			// continue;
+			// }
+
 			String uriPath = o.select("a.comic_list_view").get(0).attr("href");
 			URI absUri = uri.resolve(uriPath);
 			String postid = StringUtils.substringBefore(StringUtils.substringAfterLast(uriPath, "-"), ".");
@@ -176,7 +182,14 @@ public class 紳士漫畫 {
 					SqlDao.get().更新紳士comic資料(o); // 更新db為下載完成
 					System.out.println("更新db ok:" + o);
 				} catch (Exception ex) {
-					throw new RuntimeException(ex);
+					String exStr = ex.toString() + ("\r\n" + o.toString());
+					// throw new RuntimeException(ex);
+					File outFile = new File(fileSavePath, "comicError_" + o.get("comicid") + ".txt");
+					try {
+						FileUtils.write(outFile, exStr);
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
 				}
 			});
 
