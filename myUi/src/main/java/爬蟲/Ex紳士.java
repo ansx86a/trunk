@@ -19,6 +19,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import utils.Utils;
+import clientServer.Irmi;
+import clientServer.RMIClient;
 import db.SqlDao;
 
 public class Ex紳士 {
@@ -31,8 +33,13 @@ public class Ex紳士 {
 		重新下載, 接下去下載
 	}
 
-	private Extype type = Extype.爬蟲;
+	enum RemoteMode {
+		本地, 遠端
+	}
+
+	private Extype type = Extype.捉圖;
 	private DownloadMode downloadMode = DownloadMode.接下去下載;
+	private RemoteMode remoteMode = RemoteMode.本地;
 	private HttpUtils h = new HttpUtils();
 	// 檔案相關
 	private String fileSavePath = "e:/moe/ex";
@@ -54,20 +61,20 @@ public class Ex紳士 {
 		Ex紳士 ex = new Ex紳士();
 		ex.init();
 		if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
-//			for (int i = 100; i < 110; i++) {
-//				String url = "https://exhentai.org/?page=" + i
-//						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-//				System.out.println(url);
-//				ex.讀取文章列表(url);
-//				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-//			}
-//			for (int i = 200; i < 250; i++) {
-//				String url = "https://exhentai.org/?page=" + i
-//						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-//				System.out.println(url);
-//				ex.讀取文章列表(url);
-//				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-//			}
+			// for (int i = 100; i < 115; i++) {
+			// String url = "https://exhentai.org/?page=" + i
+			// + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+			// System.out.println(url);
+			// ex.讀取文章列表(url);
+			// Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+			// }
+			// for (int i = 250; i < 300; i++) {
+			// String url = "https://exhentai.org/?page=" + i
+			// + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+			// System.out.println(url);
+			// ex.讀取文章列表(url);
+			// Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+			// }
 			System.out.println("end");
 			return;
 		}
@@ -110,11 +117,16 @@ public class Ex紳士 {
 
 			}
 		}
+		System.out.println("end");
 	}
 
 	public void init() throws IOException {
 		String cookieStr = FileUtils.readFileToString(Utils.getResourceFromRoot("爬蟲/Ex紳士cookies.txt"));
 		h.setCookieStore(cookieStr);
+		if (remoteMode == RemoteMode.遠端) {
+			RMIClient.get();
+		}
+
 	}
 
 	public void 讀取文章列表(String url) throws IOException {
@@ -148,7 +160,11 @@ public class Ex紳士 {
 		String result = "";
 		for (int i = 0; i < 10; i++) {
 			try {
-				result = h.cookiesHttp(nextUrl);
+				if (remoteMode == RemoteMode.遠端) {
+					result = RMIClient.get().cookiesHttp(nextUrl);
+				} else {
+					result = h.cookiesHttp(nextUrl);
+				}
 				break;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -262,7 +278,11 @@ public class Ex紳士 {
 		for (int i = 0; i < 5; i++) {
 			try {
 				doThreadSleep();
-				result = h.cookiesHttp(imgUrl);
+				if (remoteMode == RemoteMode.遠端) {
+					result = RMIClient.get().cookiesHttp(imgUrl);
+				} else {
+					result = h.cookiesHttp(imgUrl);
+				}
 				break;
 			} catch (Exception ex) {
 				ex.printStackTrace();

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-4.2.xsd ">
+
+	<description>Spring公共配置</description>
+	<!-- <context:component-scan base-package="spring.remote" /> -->
+	<!-- 實作介面的service的bean -->
+	<bean id="serviceServerBean" class="clientServer.RMIServer" />
+
+	<bean id="serviceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- 實作rmi服務介面的Bean -->
+		<property name="service">
+			<ref bean="serviceServerBean" />
+		</property>
+		<!-- service的名稱，不重要，隨便就好 -->
+		<property name="serviceName">
+			<value>RmiServiceName</value>
+		</property>
+		<!-- 這個rmi服務的介面 -->
+		<property name="serviceInterface">
+			<value>clientServer.Irmi</value>
+		</property>
+
+		<!-- defaults to 1099 -->
+		<!-- <property name="registryPort" value="1199" /> -->
+	</bean>
+</beans>
+

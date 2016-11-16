@@ -1,4 +1,3 @@
-
 {
     "domain": ".exhentai.org",
     "expirationDate": 1509939304.279241,
@@ -57,7 +56,7 @@
 },
 {
     "domain": ".exhentai.org",
-    "expirationDate": 1509720539.344645,
+    "expirationDate": 1510657115.05168,
     "hostOnly": false,
     "httpOnly": false,
     "name": "s",
@@ -66,7 +65,7 @@
     "secure": false,
     "session": false,
     "storeId": "0",
-    "value": "92f3b6f9bb5b0cb1ff6ee629183e9f226ec3f056ce87efdc9c86523b2dd16c27efab0313a11cf22c85664243ed30804218c63e4c90fea073390fe514abbcce77",
+    "value": "92f3b6f9b",
     "id": 5
 },
 {
@@ -85,7 +84,7 @@
 },
 {
     "domain": "exhentai.org",
-    "expirationDate": 1510309082.089963,
+    "expirationDate": 1510742959.88626,
     "hostOnly": true,
     "httpOnly": false,
     "name": "lv",
@@ -94,6 +93,6 @@
     "secure": false,
     "session": false,
     "storeId": "0",
-    "value": "1478691598-1478773063",
+    "value": "1479142219-1479206956",
     "id": 7
 }
