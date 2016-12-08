@@ -61,20 +61,20 @@ public class Ex紳士 {
 		Ex紳士 ex = new Ex紳士();
 		ex.init();
 		if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
-			// for (int i = 100; i < 115; i++) {
-			// String url = "https://exhentai.org/?page=" + i
-			// + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-			// System.out.println(url);
-			// ex.讀取文章列表(url);
-			// Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-			// }
-			// for (int i = 250; i < 300; i++) {
-			// String url = "https://exhentai.org/?page=" + i
-			// + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-			// System.out.println(url);
-			// ex.讀取文章列表(url);
-			// Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-			// }
+//			 for (int i = 100; i < 120; i++) {
+//			 String url = "https://exhentai.org/?page=" + i
+//			 + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+//			 System.out.println(url);
+//			 ex.讀取文章列表(url);
+//			 Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+//			 }
+//			 for (int i = 500; i < 550; i++) {
+//			 String url = "https://exhentai.org/?page=" + i
+//			 + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+//			 System.out.println(url);
+//			 ex.讀取文章列表(url);
+//			 Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+//			 }
 			System.out.println("end");
 			return;
 		}
