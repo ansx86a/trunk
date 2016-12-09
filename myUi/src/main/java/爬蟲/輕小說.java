@@ -25,11 +25,15 @@ public class 輕小說 {
 		// 動畫化//http://www.wenku8.com/modules/article/toplist.php?sort=anime&page=2
 		// http://www.wenku8.com/novel/1/1386/
 
-		//http://novel.slieny.com/modules/article/index.php
-		//http://novel.slieny.com/list/_3.html
-		//推見排序
-		//http://novel.slieny.com/toplist/allvote-4.html
-		動漫區: {
+		// http://novel.slieny.com/modules/article/index.php
+		// http://novel.slieny.com/list/_3.html
+		// 推見排序
+		// http://novel.slieny.com/toplist/allvote-4.html
+		幽月輕小說文庫: {
+
+		}
+
+		輕小說文庫動漫區: {
 			// 輕小說 a = new 輕小說();
 			// for (int i = 9; i < 21; i++) {
 			// String url = "http://www.wenku8.com/modules/article/toplist.php?sort=anime";
