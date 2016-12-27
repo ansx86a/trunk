@@ -37,7 +37,7 @@ public class Ex紳士 {
 		本地, 遠端
 	}
 
-	private Extype type = Extype.捉圖;
+	private Extype type = Extype.爬蟲;
 	private DownloadMode downloadMode = DownloadMode.接下去下載;
 	private RemoteMode remoteMode = RemoteMode.本地;
 	private HttpUtils h = new HttpUtils();
@@ -48,6 +48,8 @@ public class Ex紳士 {
 
 	// 同步操作相關
 	public static Object obj = new Object();
+	private long count = 0;
+	private long stopCount = 50000;
 	private long 時間間隔 = 2_000;
 	public Date d = new Date(System.currentTimeMillis() + 時間間隔);
 	public Random rand = new Random();
@@ -68,13 +70,13 @@ public class Ex紳士 {
 //			 ex.讀取文章列表(url);
 //			 Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
 //			 }
-//			 for (int i = 500; i < 550; i++) {
-//			 String url = "https://exhentai.org/?page=" + i
-//			 + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-//			 System.out.println(url);
-//			 ex.讀取文章列表(url);
-//			 Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-//			 }
+			 for (int i = 650; i < 700; i++) {
+			 String url = "https://exhentai.org/?page=" + i
+			 + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+			 System.out.println(url);
+			 ex.讀取文章列表(url);
+			 Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+			 }
 			System.out.println("end");
 			return;
 		}
@@ -156,7 +158,12 @@ public class Ex紳士 {
 	}
 
 	public void 圖檔列表頁面(String nextUrl) throws Exception {
-
+		if(count>stopCount){
+			System.out.println("stop count=" + count);
+			throw new RuntimeException("超過了");
+		}
+		
+		
 		String result = "";
 		for (int i = 0; i < 10; i++) {
 			try {
@@ -279,8 +286,10 @@ public class Ex紳士 {
 			try {
 				doThreadSleep();
 				if (remoteMode == RemoteMode.遠端) {
+					count++;
 					result = RMIClient.get().cookiesHttp(imgUrl);
 				} else {
+					count++;
 					result = h.cookiesHttp(imgUrl);
 				}
 				break;

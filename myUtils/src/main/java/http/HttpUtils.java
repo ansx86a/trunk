@@ -174,7 +174,7 @@ public class HttpUtils {
 
 		try (CloseableHttpClient httpclient = HttpClients.createDefault();) {
 			HttpGet httpget = new HttpGet(url);
-			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(60_000).setConnectTimeout(50_000)
+			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(20_000).setConnectTimeout(7_000)
 					.build();
 			httpget.setConfig(requestConfig);
 			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
