@@ -42,14 +42,14 @@ public class Ex紳士 {
 	private RemoteMode remoteMode = RemoteMode.本地;
 	private HttpUtils h = new HttpUtils();
 	// 檔案相關
-	private String fileSavePath = "e:/moe/ex";
+	private String fileSavePath = "d:/moe/ex";
 	private File outDir;
 	private HashMap row;
 
 	// 同步操作相關
 	public static Object obj = new Object();
 	private long count = 0;
-	private long stopCount = 50000;
+	private long stopCount = 46000;
 	private long 時間間隔 = 2_000;
 	public Date d = new Date(System.currentTimeMillis() + 時間間隔);
 	public Random rand = new Random();
@@ -63,20 +63,21 @@ public class Ex紳士 {
 		Ex紳士 ex = new Ex紳士();
 		ex.init();
 		if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
-//			 for (int i = 100; i < 120; i++) {
-//			 String url = "https://exhentai.org/?page=" + i
-//			 + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-//			 System.out.println(url);
-//			 ex.讀取文章列表(url);
-//			 Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-//			 }
-			 for (int i = 650; i < 700; i++) {
-			 String url = "https://exhentai.org/?page=" + i
-			 + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-			 System.out.println(url);
-			 ex.讀取文章列表(url);
-			 Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
-			 }
+			// for (int i = 100; i < 200; i++) {
+			// String url = "https://exhentai.org/?page=" + i
+			// + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+			// System.out.println(url);
+			// ex.讀取文章列表(url);
+			// Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+			// }
+			for (int i = 200; i < 300; i++) {
+				String url = "https://exhentai.org/?page=" + i
+						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+				//https://exhentai.org/?page=1&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter
+				System.out.println(url);
+				ex.讀取文章列表(url);
+				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+			}
 			System.out.println("end");
 			return;
 		}
@@ -107,6 +108,7 @@ public class Ex紳士 {
 				}
 				ex.row = m;
 				String dir = 共用.處理檔名(m.get("title1").toString());
+				dir += "(exid_" + m.get("exid") + ")";
 				System.out.println(dir);
 				ex.outDir = 共用.checkFile(ex.fileSavePath, dir, "");
 				System.out.println(ex.outDir);
@@ -158,14 +160,13 @@ public class Ex紳士 {
 	}
 
 	public void 圖檔列表頁面(String nextUrl) throws Exception {
-		if(count>stopCount){
+		if (count > stopCount) {
 			System.out.println("stop count=" + count);
 			throw new RuntimeException("超過了");
 		}
-		
-		
+
 		String result = "";
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			try {
 				if (remoteMode == RemoteMode.遠端) {
 					result = RMIClient.get().cookiesHttp(nextUrl);
@@ -242,7 +243,8 @@ public class Ex紳士 {
 	 * 
 	 * @param imgUrl
 	 * @param page
-	 * @param isUseCache 預設帶0，有發現cache會變成1，重作1次沒有快取帶2
+	 * @param isUseCache
+	 *            預設帶0，有發現cache會變成1，重作1次沒有快取帶2
 	 * @return
 	 * @throws Exception
 	 */
@@ -275,6 +277,7 @@ public class Ex紳士 {
 
 	/**
 	 * 解析出圖檔頁的html來
+	 * 
 	 * @param imgUrl
 	 * @param page
 	 * @return
@@ -282,7 +285,7 @@ public class Ex紳士 {
 	 */
 	public String 取得圖檔頁資訊(String imgUrl, String page) throws IOException {
 		String result = null;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			try {
 				doThreadSleep();
 				if (remoteMode == RemoteMode.遠端) {
@@ -326,7 +329,7 @@ public class Ex紳士 {
 				newPage + "_" + StringUtils.substringAfterLast(imgSrc, "/"), "");
 		// File outFile = new File(outDir, StringUtils.substringAfterLast(imgSrc, "/"));
 		try {
-			HttpUtils.httpTry(imgSrc, outFile, 1);
+			HttpUtils.httpTry(imgSrc, outFile, 5);
 		} catch (Exception ex) {
 			if (imgUrl.indexOf("?nl=") < 0) {
 				return 圖檔頁(imgUrl + "?nl=" + fail, page);
@@ -334,7 +337,7 @@ public class Ex紳士 {
 			String newLog = outDir.getAbsolutePath() + "imgError_" + StringUtils.substringAfterLast(imgSrc, "/") + "_"
 					+ new Date().getTime() / 1000 % 3600 + ".txt";
 			File newLogFile = new File(newLog);
-			String log = "" + row.get("url") + "\r\n" + info + "\r\n" + imgSrc;
+			String log = "" + row.get("url") + "\r\n" + info + "\r\n" + imgSrc + "\r\n" + outFile;
 			FileUtils.writeStringToFile(newLogFile, log);
 			return false;
 		}
@@ -343,7 +346,8 @@ public class Ex紳士 {
 
 	public void doThreadSleep() throws Exception {
 		while (true) {
-			// System.out.println(Thread.currentThread().getId() + "-" + new Date(System.currentTimeMillis()));
+			// System.out.println(Thread.currentThread().getId() + "-" + new
+			// Date(System.currentTimeMillis()));
 			synchronized (obj) {
 				if (System.currentTimeMillis() - d.getTime() > 0) {
 					d = new Date(System.currentTimeMillis() + 時間間隔 - 500 + rand.nextInt(1000));// 弄亂時間差

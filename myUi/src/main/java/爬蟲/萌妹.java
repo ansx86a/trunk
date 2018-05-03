@@ -18,10 +18,12 @@ import org.jsoup.select.Elements;
 import utils.Utils;
 import db.SqlDao;
 
+//bxxxxxxxxxxxxxxxxxxxxxxxxx86
+//gxxxxxxxxxxxxxxxxxxxxxxxxxxx
 public class 萌妹 {
 	private HttpUtils h = new HttpUtils();
 	private static int[] skipPost = new int[] { 2057, 2924, 4098 };
-	private static String fileSavePath = "e:/moe/post";
+	private static String fileSavePath = "d:/moe/post";
 
 	public static void main(String[] args) throws Exception {
 
@@ -39,7 +41,7 @@ public class 萌妹 {
 			// https://yande.re/pool?page=157
 			// https://yande.re/pool?page=1
 			萌妹 a = new 萌妹();
-			for (int i = 145; i <= 157; i++) {
+			for (int i = 2; i <= 30; i++) {
 				String url = "https://yande.re/pool?page=" + i;
 				a.readlist(url);
 			}
@@ -132,7 +134,7 @@ public class 萌妹 {
 			String filePath = (String) map.get("file_path");
 			String title3 = (String) map.get("title3");
 			Integer postid = (Integer) map.get("postid");
-			if (postid > 500) {// 因為有好幾批下載，會有檔名重覆的問題，所以以postid區間來當成重新命名的依據
+			if (postid < 4200) {// 因為有好幾批下載，會有檔名重覆的問題，所以以postid區間來當成重新命名的依據
 				continue;
 			}
 

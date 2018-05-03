@@ -34,20 +34,22 @@ public class 紳士漫畫 {
 		}
 	}
 
-	private 爬蟲type t = 爬蟲type.同人和cosplay;
-	private String fileSavePath = "e:/moe/hcomic";
+	private 爬蟲type t = 爬蟲type.單行本;
+	private String fileSavePath = "d:/moe/hcomic";
 	private int[] skipComic = new int[] {};
 	private String type = t.toString();// 1:單行本2:雜誌3同人&cosplay
+	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
 
 	public static void main(String[] args) throws Exception {
-		單行本爬蟲: { // 改成只爬蟲不下載，一頁有12個項目
-			if (true) {
+		單行本爬蟲: {
+			if (false) {// false=只爬蟲不下載，一頁有12個項目
 				break 單行本爬蟲;
 			}
 
 			紳士漫畫 a = new 紳士漫畫();
 			if (a.t == 爬蟲type.單行本) {
-				for (int i = 1; i <= 345; i++) {// 2016/10/31
+				for (int i = 1; i <= 50; i++) {// 2018/04/20
+					System.out.println("now--" + i);
 					// http://www.wnacg.org/albums-index-page-1-cate-13.html//日文
 					// http://www.wnacg.org/albums-index-page-2-cate-6.html//中日文
 					String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-6.html";
@@ -55,13 +57,14 @@ public class 紳士漫畫 {
 				}
 			} else if (a.t == 爬蟲type.雜誌) {// 306//2016/10/31
 				for (int i = 1; i <= 310; i++) {
+					System.out.println("now--" + i);
 					String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-7.html";
 					a.本子list頁(url);
 				}
 			} else if (a.t == 爬蟲type.同人和cosplay) {
-				for (int i = 1250; i <= 1750; i++) {// 1731//2016/10/31
+				for (int i = 600; i <= 1000; i++) {// 1731//2016/10/31
 					String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-5.html";
-					System.out.println(url);
+					System.out.println("now--" + i);
 					a.本子list頁(url);
 				}
 			}
@@ -102,19 +105,21 @@ public class 紳士漫畫 {
 	}
 
 	public void 本子list頁(String url) throws Exception {
-		Document doc = Jsoup.connect(url).get();
+		System.out.println(url);
+		Document doc = Jsoup.connect(url).timeout(100000).userAgent(USER_AGENT).get();
 		URI uri = new URI(url);
 		Elements es = null;
-		es = doc.select(".search_result_box");
+		es = doc.select(".gallary_item");
 		for (Element o : es) {
-			String title = o.select("p.title_name").get(0).text();
+			String title = o.select("div.title>a").get(0).text();
 			System.out.println(title);
 			// if (title.equals("[Pつssy汉化组-062] (C86) [H.B.A (うさぎなごむ)] 搾り魔女 (オリジナル)")) {
 			// System.out.println(title);
 			// continue;
 			// }
 
-			String uriPath = o.select("a.comic_list_view").get(0).attr("href");
+			// String uriPath = o.select("a.comic_list_view").get(0).attr("href");
+			String uriPath = o.select("div.title>a").get(0).attr("href");
 			URI absUri = uri.resolve(uriPath);
 			String postid = StringUtils.substringBefore(StringUtils.substringAfterLast(uriPath, "-"), ".");
 			HashMap map = new HashMap<>();
@@ -135,12 +140,14 @@ public class 紳士漫畫 {
 	}
 
 	public void 漫畫list頁(String url, HashMap map) throws Exception {
-		Document doc = Jsoup.connect(url).get();
+		System.out.println(url);
+		Document doc = Jsoup.connect(url).timeout(100000).userAgent(USER_AGENT).get();
 		URI uri = new URI(url);
-		String downloadPage = doc.select("a:contains(下載本子)").attr("href");
+		//String downloadPage = doc.select("a:contains(下載本子)").attr("href");
+		String downloadPage = doc.select("a.downloadbtn").attr("href");
 		String absDownloadPage = uri.resolve(downloadPage).toString();
-
-		doc = Jsoup.connect(absDownloadPage).get();
+		System.out.println(absDownloadPage);
+		doc = Jsoup.connect(absDownloadPage).timeout(100000).userAgent(USER_AGENT).get();
 		Elements es = doc.select("a:contains(本地下載)");
 		// 發現本地下載1和2都是一樣的位扯，所以就用1就好了
 		String downloadFile = es.attr("href");
