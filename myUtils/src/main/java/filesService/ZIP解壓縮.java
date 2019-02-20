@@ -1,20 +1,27 @@
 package filesService;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.io.ZipOutputStream;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
-
-import org.apache.commons.io.FileUtils;
-
 import utils.Utils;
 
 /**
  * 注意ZIP4J的一個特點，如果zip檔已存在，他不會把他zip蓋過去，而是在zip檔中加入此次的東西檔<br>
- * 感覺有vfs的概念一樣
+ * 感覺有vfs的概念一樣<br>
+ * 新的zip 3rd有空試試 https://github.com/zeroturnaround/zt-zip
+ * 
  * @author ai
  *
  */
@@ -73,6 +80,33 @@ public class ZIP解壓縮 {
 		}
 	}
 
+	// 在工作上研究出來的，本機還未實測過
+	public byte[] 直接從byteArray產生zip檔(List<Pair<String, byte[]>> nameDataList) {
+		if (CollectionUtils.isEmpty(nameDataList)) {
+			return null;
+		}
+
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ZipOutputStream zos = new ZipOutputStream(baos)) {
+			for (Pair<String, byte[]> nameData : nameDataList) {
+				ZipParameters p = new ZipParameters();
+				p.setCompressionLevel(Zip4jConstants.COMP_STORE);
+				p.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+				p.setSourceExternalStream(true);
+				p.setFileNameInZip(nameData.getLeft());
+				zos.putNextEntry(null, p);
+				zos.write(nameData.getRight());
+				zos.closeEntry();
+			}
+			zos.finish();
+			zos.close();
+			return baos.toByteArray();
+		} catch (IOException | ZipException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public static void main(String args[]) throws Exception {
 		File f = Utils.getResourceFromRoot("filesService");
 		System.out.println(f);
@@ -80,8 +114,8 @@ public class ZIP解壓縮 {
 		File zipFile = Utils.getResourceFromRoot("filesService.zip");
 		File extDir = Utils.getResourceFromRoot("filesService壓解縮");
 		System.out.println(extDir);
-		解壓到目錄(zipFile,extDir);
-		
+		解壓到目錄(zipFile, extDir);
+
 		System.out.println("end");
 	}
 
