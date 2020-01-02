@@ -1,9 +1,8 @@
 package 爬蟲;
 
-import http.HttpUtils;
-
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,20 +14,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import utils.Utils;
 import db.SqlDao;
+import http.HttpUtils;
+import utils.Utils;
 
 //bxxxxxxxxxxxxxxxxxxxxxxxxx86
 //gxxxxxxxxxxxxxxxxxxxxxxxxxxx
 public class 萌妹 {
 	private HttpUtils h = new HttpUtils();
-	private static int[] skipPost = new int[] { 2057, 2924, 4098 };
+	// private static int[] skipPost = new int[] { 2057, 2924,
+	// 4098,5604,5603,5602,5585,5339,5121 };
+	private List<Integer> skipPost = Arrays.asList(2057, 2924, 4098, 5604, 5603, 5602, 5588, 5458, 5436, 5339,5203, 5121,5114);
 	private static String fileSavePath = "d:/moe/post";
 
 	public static void main(String[] args) throws Exception {
 
 		用title3重新命名: {
-			if (false) {
+			if (true) {
 				break 用title3重新命名;
 			}
 			萌妹 a = new 萌妹();
@@ -41,9 +43,15 @@ public class 萌妹 {
 			// https://yande.re/pool?page=157
 			// https://yande.re/pool?page=1
 			萌妹 a = new 萌妹();
-			for (int i = 2; i <= 30; i++) {
+			for (int i = 2; i <= 10; i++) {//2019/01/29
 				String url = "https://yande.re/pool?page=" + i;
-				a.readlist(url);
+				try {
+					a.readlist(url);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					continue;
+				}
+
 			}
 		}
 		System.out.println("end");
@@ -65,15 +73,15 @@ public class 萌妹 {
 			URI absUri = uri.resolve(uriPath);
 			String postNum = StringUtils.substringAfterLast(uriPath, "/");
 
-			HashMap map = new HashMap<>();
+			HashMap<String, Object> map = new HashMap<>();
 			map.put("postid", postNum);
 			map.put("title1", title);
 			map.put("url", uriPath);
 			map.put("absurl", absUri.toString());
-			System.out.println(postNum + ":" + Arrays.binarySearch(skipPost, Integer.parseInt(postNum)));
+			System.out.println(postNum + ":" + skipPost.contains(Integer.parseInt(postNum)));
 			if (確認是否已存在(map)) {
 				System.out.println("檔案已存在:" + map);
-			} else if (Arrays.binarySearch(skipPost, Integer.parseInt(postNum)) >= 0) {
+			} else if (skipPost.contains(Integer.parseInt(postNum))) {
 				System.out.println("跳過無法下載的zip檔：" + postNum);
 			} else {
 				readPostPage(absUri, map);

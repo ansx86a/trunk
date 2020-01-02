@@ -4,11 +4,13 @@ import http.HttpUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -23,10 +25,23 @@ import clientServer.Irmi;
 import clientServer.RMIClient;
 import db.SqlDao;
 
+
 public class Ex紳士 {
 
+enum Site {
+	e, ex;
+	public String toString() {
+		if (this == e) {
+			return "https://e-hentai.org";
+		}
+		if (this == ex) {
+			return "https://exhentai.org";
+		}
+		return "";
+	}
+}
 	enum Extype {
-		爬蟲, 捉圖;
+		爬蟲, 捉圖, 檢查不下載,
 	}
 
 	enum DownloadMode {
@@ -37,8 +52,10 @@ public class Ex紳士 {
 		本地, 遠端
 	}
 
-	private Extype type = Extype.爬蟲;
-	private DownloadMode downloadMode = DownloadMode.接下去下載;
+	private static List notDownloadList = Arrays.asList("ta_male:yaoi");
+	private static Site site = Site.ex;
+	private Extype type = Extype.捉圖;
+	private DownloadMode downloadMode = DownloadMode.重新下載;
 	private RemoteMode remoteMode = RemoteMode.本地;
 	private HttpUtils h = new HttpUtils();
 	// 檔案相關
@@ -63,39 +80,51 @@ public class Ex紳士 {
 		Ex紳士 ex = new Ex紳士();
 		ex.init();
 		if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
-			// for (int i = 100; i < 200; i++) {
+			// for (int i = 200; i < 300; i++) {
 			// String url = "https://exhentai.org/?page=" + i
 			// + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
 			// System.out.println(url);
 			// ex.讀取文章列表(url);
 			// Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
 			// }
-			for (int i = 200; i < 300; i++) {
-				String url = "https://exhentai.org/?page=" + i
-						+ "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
-				//https://exhentai.org/?page=1&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter
+			// 開始200-300
+			// ex到了5300
+			// for (int i = 5200; i <= 5300; i++) {// 感覺有很多莫名的資料，很古怪，順序有問題？改天全部重掃嗎？
+			 for (int i = 6700; i <= 6900; i++) {// 感覺有很多莫名的資料，很古怪，順序有問題？改天全部重掃嗎？
+//			for (int i = 200; i <= 300; i++) {
+				// String url = "https://exhentai.org/?page=" + i;
+				String url = site == Site.ex ? "https://exhentai.org/?page=" + i
+						: "https://e-hentai.org/?page=" + i + "&f_cats=745";
+				// 下面是舊的url
+				// String url = "https://exhentai.org/?page=" + i
+				// + "&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter";
+				// https://exhentai.org/?page=1&f_doujinshi=on&f_manga=on&f_gamecg=on&f_non-h=on&f_apply=Apply+Filter
+
 				System.out.println(url);
+
+				// try {
 				ex.讀取文章列表(url);
-				Thread.sleep(2000);// 每個主頁分開2秒，才不會讀太快
+				// }catch (Exception eex) {
+				// eex.printStackTrace();
+				// }
+
+				Thread.sleep(5_000);// 每個主頁分開2秒，才不會讀太快
 			}
 			System.out.println("end");
 			return;
 		}
-		if (ex.type == Extype.捉圖) {
-			// nextUrl = "https://exhentai.org/g/992806/2d46195697/";// 先用來測試一下
-			// readnext(nextUrl);
-			HashMap map = new HashMap();
-			map.put("downloaded", 0);
-			map.put("looked", 1);
-			List<HashMap> list = SqlDao.get().撈取ex資料(map);
 
-			Comparator<HashMap> c = (x, y) -> {
-				return (int) y.get("exid") - (int) x.get("exid");// 大的在上面
-				// return (int) x.get("exid") - (int) y.get("exid");//小的在上面
-			};
-			// list = list.stream().sorted(c).collect(Collectors.toList());
-			list.sort(c);
-			for (HashMap m : list) {
+		if (ex.type == Extype.檢查不下載) {
+			List<HashMap> list = 列表未下載已排序的網扯();
+			int i = 0;
+			i++;
+			System.out.println(i);
+		}
+
+		if (ex.type == Extype.捉圖) {
+			List<HashMap> list = 列表未下載已排序的網扯();
+			for (@SuppressWarnings("rawtypes")
+			HashMap m : list) {
 				if (ex.stopDate.before(new Date())) {
 					System.out.println("超過執行時間，強制停止");
 					return;
@@ -108,10 +137,13 @@ public class Ex紳士 {
 				}
 				ex.row = m;
 				String dir = 共用.處理檔名(m.get("title1").toString());
-				dir += "(exid_" + m.get("exid") + ")";
+				// dir += "(exid_" + m.get("exid") + ")";
 				System.out.println(dir);
-				ex.outDir = 共用.checkFile(ex.fileSavePath, dir, "");
+				ex.outDir = 共用.checkFile(ex.fileSavePath, dir, "(exid_" + m.get("exid") + ")");
 				System.out.println(ex.outDir);
+				if (site == Site.e) {
+					nextUrl = nextUrl.replaceFirst(Pattern.quote(Site.ex.toString()), Site.e.toString());
+				}
 				ex.圖檔列表頁面(nextUrl);
 
 				HashMap updateMap = new HashMap();
@@ -124,24 +156,47 @@ public class Ex紳士 {
 		System.out.println("end");
 	}
 
+	private static List<HashMap> 列表未下載已排序的網扯() {
+		// nextUrl = "https://exhentai.org/g/992806/2d46195697/";// 先用來測試一下
+		// readnext(nextUrl);
+		HashMap map = new HashMap();
+		map.put("downloaded", 0);
+		map.put("looked", 1);
+		List<HashMap> list = SqlDao.get().撈取ex資料(map);
+
+		Comparator<HashMap> c = (x, y) -> {
+			return (int) y.get("exid") - (int) x.get("exid");// 大的在上面
+			// return (int) x.get("exid") - (int) y.get("exid");//小的在上面
+		};
+		// list = list.stream().sorted(c).collect(Collectors.toList());
+		list.sort(c);
+		System.out.println("total count:" + list.size());
+		return list;
+	}
+
 	public void init() throws IOException {
-		String cookieStr = FileUtils.readFileToString(Utils.getResourceFromRoot("爬蟲/Ex紳士cookies.txt"));
+		String path = site == Site.ex ? "爬蟲/Ex紳士cookies.txt" : "爬蟲/E紳士cookies.txt";
+		String cookieStr = FileUtils.readFileToString(Utils.getResourceFromRoot(path));
 		h.setCookieStore(cookieStr);
 		if (remoteMode == RemoteMode.遠端) {
 			RMIClient.get();
 		}
-
 	}
 
 	public void 讀取文章列表(String url) throws IOException {
 		String result = h.cookiesHttp(url);// 讀取
 		Document doc = Jsoup.parse(result);
-		Elements es = doc.select(".it5 a");
+		Elements es = doc.select(".gl3c a");
 		for (Element e : es) {
 			// System.out.println(e.outerHtml());// 這裡可以取得網扯和名字
 			String nextUrl = e.attr("href");
+			if (site == Site.e) {
+				nextUrl = nextUrl.replaceAll(Pattern.quote(Site.e.toString()), Site.ex.toString());
+			}
+
 			String exid = nextUrl.split("/")[4];
-			String title = e.text();
+			// String title = e.text();
+			String title = e.select(".glink").get(0).text();
 			HashMap map = new HashMap();
 			map.put("exid", exid);
 			map.put("title1", title);
@@ -154,7 +209,16 @@ public class Ex紳士 {
 			} else {
 				System.out.print("inserting");
 				System.out.println(map);
-				SqlDao.get().新增一筆ex資料(map);
+				try {
+					SqlDao.get().新增一筆ex資料(map);
+				} catch (Exception ex) {
+
+					map.put("downloaded", 0);
+					map.put("looked", 0);
+					System.out.println("updating");
+					System.out.println(map);
+					SqlDao.get().更新ex資料(map);
+				}
 			}
 		}
 	}
