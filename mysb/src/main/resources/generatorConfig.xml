@@ -11,7 +11,11 @@
 
     <context id="OracleTables" targetRuntime="MyBatis3">
         <jdbcConnection driverClass="${driverClass}" connectionURL="${connectionURL}" userId="${userId}"
-                        password="${password}"/>
+                        password="${password}">
+            <!-- 解決schema無效的問題-->
+            <property name="nullCatalogMeansCurrent" value="true" />
+        </jdbcConnection>
+
 
 
         <javaTypeResolver>
@@ -31,8 +35,10 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="${tableName}" domainObjectName="${domainObjectName}">
-        </table>
+<!--        <table tableName="${tableName}" domainObjectName="${domainObjectName}" />-->
+        <table tableName="expool" domainObjectName="ExPool" />
+        <table tableName="hcomicpool" domainObjectName="HcomicPool" />
+        <table tableName="moepool" domainObjectName="MoePool" />
 
     </context>
 </generatorConfiguration>

@@ -24,6 +24,22 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>myUtils</groupId>
+            <artifactId>myUtils</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.12.1</version>
+        </dependency>
+
+
+
+
         <!--		要包成war的第一要件是這裡要改成tomcat的設定-->
         <!--		<dependency>-->
         <!--			<groupId>org.springframework.boot</groupId>-->
