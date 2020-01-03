@@ -1,5 +1,7 @@
 package dao;
 
+import dao.domain.HcomicPool;
+import dao.domain.HcomicPoolExample;
 import dao.domain.MoePool;
 import dao.domain.MoePoolExample;
 import myspringBoot.MysbApplication;
@@ -18,11 +20,18 @@ public class DaoTest {
 
     @Autowired
     private MoePoolMapper moePoolMapper;
+    @Autowired
+    private HcomicPoolMapper hcomicPoolMapper;
 
     @Test
     public void test() {
         List<MoePool> all = moePoolMapper.selectByExample(new MoePoolExample());
         System.out.println(all.size());
+        HcomicPoolExample ex = new HcomicPoolExample();
+        List<HcomicPool> hcList = hcomicPoolMapper.selectByExample(ex);
+        for (HcomicPool hc : hcList) {
+            System.out.println(ToStringBuilder.reflectionToString(hc));
+        }
     }
 
     @Test

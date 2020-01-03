@@ -22,7 +22,9 @@ import java.util.List;
 @Component
 public class MoeCatch {
     private HttpUtils h = new HttpUtils();
-    private static List<Integer> skipPost = Arrays.asList(2057, 2924, 4098);
+    private static List<Integer> skipPost = Arrays.asList(2057, 2924, 4098, 5604, 5603, 5602, 5588, 5458, 5436, 5339, 5203, 5121, 5114);
+
+
     private static String fileSavePath = "d:/moe/post";
 
     private MoePoolMapper moePoolMapper;
@@ -46,13 +48,17 @@ public class MoeCatch {
             // https://yande.re/pool?page=1
             MoeCatch a = new MoeCatch();
             for (int i = 2; i <= 30; i++) {
-                String url = "https://yande.re/pool?page=" + i;
-                a.readlist(url);
+                try {
+                    String url = "https://yande.re/pool?page=" + i;
+                    a.readlist(url);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    continue;
+                }
             }
         }
         System.out.println("end");
     }
-
 
     // 讀取列表頁
     public void readlist(String url) throws Exception {
@@ -90,13 +96,13 @@ public class MoeCatch {
     }
 
     // 進入list pool頁
-    public void readPostPage(URI uri, MoePool map) throws Exception {
+    public void readPostPage(URI uri, MoePool moePool) throws Exception {
         Document doc = Jsoup.connect(uri.toString()).get();
         Elements es = null;
         String download = doc.select("#subnavbar a:contains(Download)").attr("href");
         URI absDownload = uri.resolve(StringUtils.substringBefore(download, "?"));
-        map.setDownload(download);
-        map.setAbsdownload(absDownload.toString());
+        moePool.setDownload(download);
+        moePool.setAbsdownload(absDownload.toString());
         es = doc.select("#pool-show");
         es = es.get(0).children();// 設成div下面的那一層
         if (es.size() == 3) {// 只有3列的才記錄，2列的不記錄，2列的不包含subtitle
@@ -106,17 +112,17 @@ public class MoeCatch {
             } else if (subTitle.length() <= 6
                     || StringUtils.endsWithAny(subTitle.toLowerCase(), "pireze", "available from", "available from:")) {// 如果長度小於5也不採用
             } else {
-                map.setTitle2(subTitle);
+                moePool.setTitle2(subTitle);
             }
         }
-        String fileName = map.getTitle2() == null ? map.getTitle1() : map.getTitle2();// 主要用subTitle當檔名
+        String fileName = moePool.getTitle2() == null ? moePool.getTitle1() : moePool.getTitle2();// 主要用subTitle當檔名
         fileName = 共用.處理檔名(fileName);
         File f = 共用.checkFile(fileSavePath, fileName);
-        map.setFilePath(f.toString());
+        moePool.setFilePath(f.toString());
 
         捉檔案(absDownload.toString(), Utils.getResourceFromRoot("爬蟲/萌妹cookies.txt"), f);
-        System.out.println("新增資料:" + map);
-        moePoolMapper.insert(map);
+        System.out.println("新增資料:" + moePool);
+        moePoolMapper.insert(moePool);
     }
 
 
@@ -129,10 +135,10 @@ public class MoeCatch {
     public void 用title3重新命名() {
         List<MoePool> list = moePoolMapper.selectByExample(new MoePoolExample());
 
-        for (MoePool map : list) {
-            String filePath = (String) map.getFilePath();
-            String title3 = (String) map.getTitle3();
-            Integer postid = (Integer) map.getPostid();
+        for (MoePool moePool : list) {
+            String filePath = (String) moePool.getFilePath();
+            String title3 = (String) moePool.getTitle3();
+            Integer postid = (Integer) moePool.getPostid();
             if (postid < 4200) {// 因為有好幾批下載，會有檔名重覆的問題，所以以postid區間來當成重新命名的依據
                 continue;
             }
