@@ -11,7 +11,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import utils.Utils;
 
 import java.io.File;
@@ -19,7 +21,8 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-@Component
+@Controller
+@RequestMapping("moe")
 public class MoeCatch {
     private HttpUtils h = new HttpUtils();
     private static List<Integer> skipPost = Arrays.asList(2057, 2924, 4098, 5604, 5603, 5602, 5588, 5458, 5436, 5339, 5203, 5121, 5114);
@@ -27,16 +30,17 @@ public class MoeCatch {
 
     private static String fileSavePath = "d:/moe/post";
 
+    @Autowired
     private MoePoolMapper moePoolMapper;
 
+    @RequestMapping("main")
     public void main() throws Exception {
-
         用title3重新命名:
         {
-            if (false) {
+            if (true) {
                 break 用title3重新命名;
             }
-            MoeCatch a = new MoeCatch();
+            MoeCatch a = this;
             a.用title3重新命名();
             System.out.println("end 重新命名");
             return;
@@ -46,7 +50,7 @@ public class MoeCatch {
         {
             // https://yande.re/pool?page=157
             // https://yande.re/pool?page=1
-            MoeCatch a = new MoeCatch();
+            MoeCatch a = this;
             for (int i = 2; i <= 30; i++) {
                 try {
                     String url = "https://yande.re/pool?page=" + i;
@@ -120,7 +124,7 @@ public class MoeCatch {
         File f = 共用.checkFile(fileSavePath, fileName);
         moePool.setFilePath(f.toString());
 
-        捉檔案(absDownload.toString(), Utils.getResourceFromRoot("爬蟲/萌妹cookies.txt"), f);
+        捉檔案(absDownload.toString(), Utils.getResourceFromRoot("my/moe.txt"), f);
         System.out.println("新增資料:" + moePool);
         moePoolMapper.insert(moePool);
     }

@@ -53,7 +53,7 @@ public class HcCatch {
         HcCatch a = this;
         單行本爬蟲:
         {
-            if (true) {// false=只爬蟲不下載，一頁有12個項目
+            if (false) {// false=只爬蟲不下載，一頁有12個項目
                 break 單行本爬蟲;
             }
 
@@ -162,8 +162,10 @@ public class HcCatch {
         Document doc = Jsoup.connect(url).timeout(100000).userAgent(USER_AGENT).get();
         URI uri = new URI(url);
         //String downloadPage = doc.select("a:contains(下載本子)").attr("href");
-        String downloadPage = doc.select("a.downloadbtn").attr("href");
-        String absDownloadPage = uri.resolve(downloadPage).toString();
+        //String downloadPage = doc.select("a.downloadbtn").attr("href");
+
+        //String absDownloadPage = uri.resolve(downloadPage).toString();
+        String absDownloadPage = uri.toString().replace("photos","download");
         System.out.println(absDownloadPage);
         doc = Jsoup.connect(absDownloadPage).timeout(100000).userAgent(USER_AGENT).get();
         Elements es = doc.select("a:contains(本地下載)");
