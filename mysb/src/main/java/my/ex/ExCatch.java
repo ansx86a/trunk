@@ -47,7 +47,7 @@ public class ExCatch {
     }
 
     private static Site site = Site.ex;
-    private Extype type = Extype.爬蟲;
+    private Extype type = Extype.捉圖;
     private HttpUtils h = new HttpUtils();
     // 檔案相關
     private String fileSavePath = "d:/moe/ex";
@@ -70,8 +70,8 @@ public class ExCatch {
         ExCatch ex = this;
         ex.init();
         if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
-            for (int i = 6700; i <= 6900; i++) {// 感覺有很多莫名的資料，很古怪，順序有問題？改天全部重掃嗎？
-//			for (int i = 200; i <= 300; i++) {
+//            for (int i = 6700; i <= 6900; i++) {// 感覺有很多莫名的資料，很古怪，順序有問題？改天全部重掃嗎？
+			for (int i = 200; i <= 300; i++) {
                 // String url = "https://exhentai.org/?page=" + i;
                 //要再確認一次url有沒有變，是不是變成全讀cookies，才不會把不要的東西弄進來
                 String url = site == Site.ex ? "https://exhentai.org/?page=" + i : "https://e-hentai.org/?page=" + i + "&f_cats=745";
@@ -155,7 +155,7 @@ public class ExCatch {
             exPool.setLooked(0);
             exPool.setTitle1(title);
             exPool.setUrl(mainPageUrl);
-            if (exPoolMapper.selectByPrimaryKey(exPool.getExid()) != null) {
+            if (exPoolMapper.selectByPrimaryKey(exPool.getExid()) == null) {
                 System.out.print("inserting");
                 System.out.println(ToStringBuilder.reflectionToString(exPool));
                 exPoolMapper.insert(exPool);
@@ -173,7 +173,7 @@ public class ExCatch {
         }
 
         String result = 多次重試並取得url結果(pageUrl, 20);
-        if (StringUtils.isNotBlank(result)) {
+        if (StringUtils.isBlank(result)) {
             System.out.println("無法取得列表清單，但是繼續執行不中斷出錯");
             return;
         }
