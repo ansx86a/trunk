@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<title>test</title>
+	<script type="text/javascript" src="jquery-3.0.0.min.js"></script>
+	<script type="text/javascript" src="angular.1.5.8.min.js"></script>
+</head>
+<style>
+.sky {
+	background-color: aqua;
+}
+
+.sky2 {
+	background-color: gray;
+}
+
+</style>
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+
+    <div style="position: fixed; top: 10px; left: 800px; width: 1200px; background-color: lightblue; z-index: 99">
+			<span>count=${count }</span>
+        <div style="overflow-y: scroll; height: 320px; width: 1200px;">
+            <div ng-repeat="x in doms">
+                <span ng-mousedown="doAction(x.exid,'1',x)">註記已查詢</span> <span>{{x.done}}</span>
+                <span>{{index}}</span> <span ng-mousedown="doAction(x.exid,'-1',x);x.myclass='sky2'">放棄下載</span>
+                <span ng-mousedown="openTab(x.url,$index);x.myclass='sky';" ng-class="x.myclass">{{x.title1}}</span>
+            </div>
+        </div>
+    </div>
+    <iframe id="framePage0" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage1" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage2" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage3" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage4" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage5" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage6" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage7" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage8" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage9" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage10" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage11" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage12" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage13" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage14" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage15" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage16" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage17" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage18" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <iframe id="framePage19" width="1000px" height="1000px"
+            style="transform: scale(1.4, 1.4); position: fixed; top: -200px; left: 150px;" scrolling="yes">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+</div>
+<script>
+		var app = angular.module("myApp", []);
+
+		app.controller("myCtrl", function($scope) {//這裡的$scope不能亂改變數名字
+			$.ajax({
+				method : "post",
+				url : "ex/index",
+				async : false
+			}).done(function(data) {
+				$scope.doms = JSON.parse(data);
+				mydoms = $scope.doms;
+			});
+
+			$("[id^='framePage']").hide();
+			$("#framePage0").attr("src",mydoms[0].url);
+			$("#framePage1").attr("src",mydoms[1].url);
+			$("#framePage2").attr("src",mydoms[2].url);
+			$("#framePage3").attr("src",mydoms[3].url);
+			$("#framePage4").attr("src",mydoms[4].url);
+			$("#framePage5").attr("src",mydoms[5].url);
+			$("#framePage6").attr("src",mydoms[6].url);
+			$("#framePage7").attr("src",mydoms[7].url);
+			$("#framePage8").attr("src",mydoms[8].url);
+			$("#framePage9").attr("src",mydoms[9].url);
+			$("#framePage0").show();
+
+			$scope.doAction = function(exid, action, x) {
+				var url = "ex/update";
+				$.ajax({
+					method : "post",//
+					url : url,
+					async : false,
+					data : {
+						"exid" : exid,
+						"action" : action
+					}
+				}).done(function(data) {
+					//alert("done-success->" + JSON.stringify(data));
+					x.done = "ok" + action;
+				});
+			};
+			$scope.openTab = function(url, index) {
+				//window.open(url,'_blank');
+				//$("#framePage").attr("src",url);
+
+				//修改成會預讀下一個，隔10個
+				$("[id^='framePage']").hide();
+				var iframeIndex = index % 20; 
+				if (iframeIndex < 10) {
+					$("#framePage" + iframeIndex).show();
+					$("#framePage" + (iframeIndex + 10)).attr("src",mydoms[index+10].url);
+				}else {
+					$("#framePage" + iframeIndex).show();
+					$("#framePage" + (iframeIndex - 10)).attr("src",mydoms[index+10].url);
+				}
+				
+				$scope.doAction(mydoms[index].exid,'1',mydoms[index])
+				
+			};
+			$scope.keydown = function() {
+				alert("keydown");
+			};
+		});
+
+</script>
+</body>
+</html>
