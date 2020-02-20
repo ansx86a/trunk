@@ -39,6 +39,11 @@
         <table tableName="expool" domainObjectName="ExPool" />
         <table tableName="hcomicpool" domainObjectName="HcomicPool" />
         <table tableName="moepool" domainObjectName="MoePool" />
+        <!--
+        table裡面可以加下面的東西換時間
+        <columnOverride column="xxxxx" property="xxxxxx" javaType="java.util.Date" />
+
+        -->
 
     </context>
 </generatorConfiguration>
