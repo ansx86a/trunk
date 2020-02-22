@@ -15,11 +15,22 @@ public class 同人音聲處理 {
 
 	static List<String> noCareList = new ArrayList<>();
 	static {
-//		noCareList.add("RJ235767");
-		// noCareList.add("RJ222449");
-
-		// 10
-		// noCareList.add("RJ130654");
+//		noCareList.add("RJ271520");
+//		noCareList.add("RJ266742");
+//		noCareList.add("RJ267630");
+//		noCareList.add("RJ271867");
+//		noCareList.add("RJ271908");
+//		noCareList.add("RJ268425");
+//		noCareList.add("RJ270913");
+	
+		//////////////////////////////////////////999999
+//		noCareList.add("RJ262203");
+//		noCareList.add("RJ262290");
+//		noCareList.add("RJ264095");
+//		noCareList.add("RJ265051");
+//		noCareList.add("RJ265051");
+//		noCareList.add("RJ265051");
+//		noCareList.add("RJ265051");
 
 		// noCareList.add("RJ130654");
 		// noCareList.add("RJ227046");
@@ -32,8 +43,8 @@ public class 同人音聲處理 {
 
 	public static void main(String[] args) throws IOException {
 		同人音聲處理 a = new 同人音聲處理();
-		String zipDir = "H:\\micovoice\\201906\\ok";
-		String txtPath = "H:\\micovoice\\201906\\download06.txt";
+		String zipDir = "G:\\01\\ok";
+		String txtPath = "G:\\01\\download01.txt";
 		// String zipDir = "H:\\micovoice\\201905\\ok";
 		// String txtPath="E:\\googleDrive\\my\\download05.txt";
 
@@ -42,7 +53,7 @@ public class 同人音聲處理 {
 		// a.檢查有無漏掉的檔案(new
 		// File("E:\\tool\\4網路網盤等工具\\MiPonyPortable\\Data\\downloads\\09"),
 		// new File("D:\\voice\\201809\\download09.txt"));
-
+		System.out.println("end");
 	}
 
 	public void 檢查有無漏掉的檔案(File checkDir, File txtFile) throws IOException {
