@@ -25,7 +25,8 @@ import java.util.List;
 @RequestMapping("moe")
 public class MoeCatch {
     private HttpUtils h = new HttpUtils();
-    private static List<Integer> skipPost = Arrays.asList(2057, 2924, 4098, 5604, 5603, 5602, 5588, 5458, 5436, 5339, 5203, 5121, 5114);
+    private static List<Integer> skipPost = Arrays.asList(2057, 2924, 4098, 5604, 5603, 5602, 5588, 5458, 5436, 5339, 5203, 5121, 5114,
+            96957,96780,6247,5618,5544,6158,5750,96641,5751,6101,6022,6100,6009);
 
 
     private static String fileSavePath = "d:/moe/post";
@@ -51,9 +52,10 @@ public class MoeCatch {
             // https://yande.re/pool?page=157
             // https://yande.re/pool?page=1
             MoeCatch a = this;
-            for (int i = 2; i <= 30; i++) {
+            for (int i = 2; i <=60; i++) {
                 try {
                     String url = "https://yande.re/pool?page=" + i;
+                    //System.out.println(url);
                     a.readlist(url);
                 } catch (Exception ex) {
                     ex.printStackTrace();

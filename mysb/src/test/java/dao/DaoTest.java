@@ -4,6 +4,7 @@ import dao.domain.HcomicPool;
 import dao.domain.HcomicPoolExample;
 import dao.domain.MoePool;
 import dao.domain.MoePoolExample;
+import my.moe.MoeCatch;
 import myspringBoot.MysbApplication;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.Test;
@@ -22,6 +23,13 @@ public class DaoTest {
     private MoePoolMapper moePoolMapper;
     @Autowired
     private HcomicPoolMapper hcomicPoolMapper;
+    @Autowired
+    private MoeCatch moeCatch;
+    @Test
+    public void runMoe() throws Exception {
+        moeCatch.main();
+    }
+
 
     @Test
     public void test() {
@@ -42,4 +50,6 @@ public class DaoTest {
         System.out.println(list.size());
         list.stream().forEach(o -> System.out.println(ToStringBuilder.reflectionToString(o)));
     }
+
+
 }
