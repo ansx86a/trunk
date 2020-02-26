@@ -20,13 +20,14 @@ import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Controller
 @RequestMapping("moe")
 public class MoeCatch {
     private HttpUtils h = new HttpUtils();
     private static List<Integer> skipPost = Arrays.asList(2057, 2924, 4098, 5604, 5603, 5602, 5588, 5458, 5436, 5339, 5203, 5121, 5114,
-            96957,96780,6247,5618,5544,6158,5750,96641,5751,6101,6022,6100,6009);
+            96957, 96780, 6247, 5618, 5544, 6158, 5750, 96641, 5751, 6101, 6022, 6100, 6009);
 
 
     private static String fileSavePath = "d:/moe/post";
@@ -52,7 +53,7 @@ public class MoeCatch {
             // https://yande.re/pool?page=157
             // https://yande.re/pool?page=1
             MoeCatch a = this;
-            for (int i = 2; i <=60; i++) {
+            for (int i = 2; i <= 60; i++) {
                 try {
                     String url = "https://yande.re/pool?page=" + i;
                     //System.out.println(url);
@@ -159,5 +160,35 @@ public class MoeCatch {
                 }
             }
         }
+    }
+
+    public static boolean 確認要使用title1(String title1, String title2) {
+        Pattern pattern = Pattern.compile("[\\u3042-\\u30FC]");//羅馬拼音
+        List<String> notInList = Arrays.asList("Sourced", "Artist","a href");
+
+
+        int use1 = 0;
+        int use2 = 0;
+        if (StringUtils.isBlank(title2)) {
+            return true;
+        }
+        if (pattern.matcher(title1).find()) {
+            use1 += 5;
+        }
+        if (pattern.matcher(title2).find()) {
+            use2 += 3;
+        }
+        if (StringUtils.length(title1) < StringUtils.length(title2)) {
+            use2 += 1;
+        }
+        if (StringUtils.trimToEmpty(title2).length() < 5) {
+            use2 -= 100;
+        }
+        for (String notIn : notInList) {
+            if (StringUtils.trimToEmpty(title2).toUpperCase().contains(notIn.toUpperCase())) {
+                use2 -= 1000;
+            }
+        }
+        return use1 >= use2;
     }
 }
