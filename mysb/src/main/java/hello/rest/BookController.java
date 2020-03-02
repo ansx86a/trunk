@@ -15,6 +15,10 @@ import java.util.Collection;
 @RequestMapping("/api/book")
 /**
  * <pre>
+ *     https://www.baeldung.com/spring-rest-openapi-documentation
+ *     有空再來補完，目前看到flex-doc
+ *
+ *
  * 文件網址設定在application.properties
  * swagger 測試網扯=http://localhost:8080/swagger-ui-custom.html
  * 一定要用XxxMapping不能用RequestMapping
