@@ -25,7 +25,7 @@ import java.util.TreeSet;
 @Controller
 @RequestMapping("hc")
 public class HcCatch {
-    enum 爬蟲type {
+    public enum 爬蟲type {
         單行本("1"), 雜誌("2"), 同人和cosplay("3");
         String value;
 
@@ -39,25 +39,21 @@ public class HcCatch {
         }
     }
 
-    private 爬蟲type t = 爬蟲type.單行本;
     private String fileSavePath = "d:/moe/hcomic";
+    private int startComicId = 50882;
     private int[] skipComic = new int[]{};
-    private Integer type = Integer.parseInt(t.toString());// 1:單行本2:雜誌3同人&cosplay
+    private static Integer type;// 1:單行本2:雜誌3同人&cosplay
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
 
     @Autowired
     private HcomicPoolMapper hcomicPoolMapper;
 
     @RequestMapping("main")
-    public String main() throws Exception {
+    public String main(爬蟲type type, boolean isDownload) throws Exception {
         HcCatch a = this;
-        單行本爬蟲:
-        {
-            if (false) {// false=只爬蟲不下載，一頁有12個項目
-                break 單行本爬蟲;
-            }
-
-            if (a.t == 爬蟲type.單行本) {
+        if (type != null && !isDownload) {
+            a.type = Integer.parseInt(type.value);
+            if (type == 爬蟲type.單行本) {
                 for (int i = 1; i <= 50; i++) {// 2018/04/20
                     System.out.println("now--" + i);
                     // http://www.wnacg.org/albums-index-page-1-cate-13.html//日文
@@ -65,13 +61,13 @@ public class HcCatch {
                     String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-6.html";
                     a.本子list頁(url);
                 }
-            } else if (a.t == 爬蟲type.雜誌) {// 306//2016/10/31
+            } else if (type == 爬蟲type.雜誌) {// 306//2016/10/31
                 for (int i = 1; i <= 310; i++) {
                     System.out.println("now--" + i);
                     String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-7.html";
                     a.本子list頁(url);
                 }
-            } else if (a.t == 爬蟲type.同人和cosplay) {
+            } else if (type == 爬蟲type.同人和cosplay) {
                 for (int i = 600; i <= 1000; i++) {// 1731//2016/10/31
                     String url = "http://www.wnacg.org/albums-index-page-" + i + "-cate-5.html";
                     System.out.println("now--" + i);
@@ -80,23 +76,11 @@ public class HcCatch {
             }
             return "myPage";
         }
-        單行本下載:
-        {
+        if (type != null && isDownload) {
+            a.type = Integer.parseInt(type.value);
             a.單行本下載();
         }
-        漫畫自然排序法重新命名:
-        {
-            if (true) {
-                break 漫畫自然排序法重新命名;
-            } else {
-                File souceDir = new File("z:/1");
-                File destDir = new File("z:/2");
-                漫畫自然排序法重新命名(souceDir, destDir);
-            }
-        }
-
         System.out.println("end");
-
         return "myPage";
     }
 
@@ -165,7 +149,7 @@ public class HcCatch {
         //String downloadPage = doc.select("a.downloadbtn").attr("href");
 
         //String absDownloadPage = uri.resolve(downloadPage).toString();
-        String absDownloadPage = uri.toString().replace("photos","download");
+        String absDownloadPage = uri.toString().replace("photos", "download");
         System.out.println(absDownloadPage);
         doc = Jsoup.connect(absDownloadPage).timeout(100000).userAgent(USER_AGENT).get();
         Elements es = doc.select("a:contains(本地下載)");
@@ -186,7 +170,7 @@ public class HcCatch {
 
     public void 單行本下載() {
         HcomicPoolExample ex = new HcomicPoolExample();
-        ex.createCriteria().andDownloadedEqualTo(0).andTypeEqualTo(type);
+        ex.createCriteria().andDownloadedEqualTo(0).andTypeEqualTo(type).andComicidGreaterThan(startComicId);
         List<HcomicPool> list = hcomicPoolMapper.selectByExample(ex);
         list.parallelStream().forEach(o -> {
             try { // 一次下載4個，哈哈哈，錯一個就直接崩潰

@@ -174,6 +174,7 @@ public class HttpUtils {
 
 		try (CloseableHttpClient httpclient = HttpClients.createDefault();) {
 			HttpGet httpget = new HttpGet(url);
+			httpget.setHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36");
 			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(20_000).setConnectTimeout(7_000)
 					.build();
 			httpget.setConfig(requestConfig);
