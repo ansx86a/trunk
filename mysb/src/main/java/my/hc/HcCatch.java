@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("hc")
@@ -183,6 +184,7 @@ public class HcCatch {
                 o.setDownloaded(1);
                 hcomicPoolMapper.updateByPrimaryKey(o);
                 System.out.println("更新db ok:" + o);
+                checkSleep();
             } catch (Exception ex1) {
                 String exStr = ex1.toString() + ("\r\n" + o.toString());
                 // throw new RuntimeException(ex);
@@ -194,5 +196,16 @@ public class HcCatch {
                 }
             }
         });
+    }
+
+    private void checkSleep() {
+        File f = new File("z:/新文字文件.txt");
+        while (f.exists()) {
+            try {
+                Thread.sleep(10 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
