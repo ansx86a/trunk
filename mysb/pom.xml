@@ -130,6 +130,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 取消repackage的寫法一 -->
+                <!--                <executions><execution><phase>none</phase></execution></executions>-->
+                <!-- 取消repackage的寫法二 -->
+                <!--                <executions><execution>-->
+                <!--                    <id>repackage</id>-->
+                <!--                    <goals><goal>repackage</goal></goals>-->
+                <!--                    <configuration><skip>true</skip></configuration>-->
+                <!--                </execution></executions>-->
             </plugin>
 
             <plugin>
