@@ -99,28 +99,28 @@
             <version>28.2-jre</version>
         </dependency>
 
-        <!-- swagger的測試 -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-core</artifactId>
-            <version>1.1.44</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>classgraph</artifactId>
-                    <groupId>io.github.classgraph</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.1.44</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-webflux-ui</artifactId>
-            <version>1.1.44</version>
-        </dependency>
+        <!-- swagger的測試 先拿掉不然讀不到static resource-->
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-core</artifactId>-->
+<!--            <version>1.1.44</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>classgraph</artifactId>-->
+<!--                    <groupId>io.github.classgraph</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-ui</artifactId>-->
+<!--            <version>1.1.44</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-webflux-ui</artifactId>-->
+<!--            <version>1.1.44</version>-->
+<!--        </dependency>-->
 
 
     </dependencies>
