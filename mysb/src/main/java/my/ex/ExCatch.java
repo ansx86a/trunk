@@ -71,7 +71,8 @@ public class ExCatch {
         ex.init();
         if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
 //            for (int i = 6700; i <= 6900; i++) {// 感覺有很多莫名的資料，很古怪，順序有問題？改天全部重掃嗎？
-			for (int i = 200; i <= 300; i++) {
+            int from = 700;
+			for (int i = from; i <= from+200; i++) {
                 // String url = "https://exhentai.org/?page=" + i;
                 //要再確認一次url有沒有變，是不是變成全讀cookies，才不會把不要的東西弄進來
                 String url = site == Site.ex ? "https://exhentai.org/?page=" + i : "https://e-hentai.org/?page=" + i + "&f_cats=745";
@@ -147,7 +148,7 @@ public class ExCatch {
             if (list.size() > 0) {
                 System.out.print("------已經存在了");
                 System.out.println(ToStringBuilder.reflectionToString(list.get(0)));
-                return;
+                continue;
             }
             ExPool exPool = new ExPool();
             exPool.setExid(Integer.parseInt(exid));
@@ -185,6 +186,7 @@ public class ExCatch {
             String page = e.text();
             System.out.println("page = " + page + ",imgUrl=" + imgUrl);
             try {
+                checkSleep();
                 boolean saveOk = 圖檔頁(imgUrl, page);// 核心的下載程式
             } catch (Exception ex) {
                 System.out.println("管線操作發生ex");
@@ -339,5 +341,16 @@ public class ExCatch {
         }
 
         return false;
+    }
+
+    private void checkSleep() {
+        File f = new File("z:/新文字文件.txt");
+        while (f.exists()) {
+            try {
+                Thread.sleep(10 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

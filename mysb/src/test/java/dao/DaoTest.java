@@ -1,5 +1,6 @@
 package dao;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.Multiset;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +43,13 @@ public class DaoTest {
 
     @Test
     public void testDownloadMoe() {
-        List<MoePool> all = moePoolMapper.selectByExample(new MoePoolExample());
-        System.out.println(all.size());
-        HcomicPoolExample ex = new HcomicPoolExample();
-        List<HcomicPool> hcList = hcomicPoolMapper.selectByExample(ex);
-        for (HcomicPool hc : hcList) {
-            System.out.println(ToStringBuilder.reflectionToString(hc));
-        }
+//        List<MoePool> all = moePoolMapper.selectByExample(new MoePoolExample());
+//        System.out.println(all.size());
+//        HcomicPoolExample ex = new HcomicPoolExample();
+//        List<HcomicPool> hcList = hcomicPoolMapper.selectByExample(ex);
+//        for (HcomicPool hc : hcList) {
+//            System.out.println(ToStringBuilder.reflectionToString(hc));
+//        }
     }
 
     @Test
@@ -61,12 +63,15 @@ public class DaoTest {
                 listMap.put(moePool.getTitle2(), moePool);
             }
         }
+        List<Integer> idList = new ArrayList<>();
         for (Map.Entry<String, Collection<MoePool>> entry : listMap.asMap().entrySet()) {
-            if (entry.getValue().size() > 0) {
-                System.out.println(entry.getValue().size());
-                System.out.println(entry.getValue().iterator().next().getTitle2());
+            if (StringUtils.isNotBlank(entry.getKey()) && entry.getValue().size() > 0 && Iterables.getFirst(entry.getValue(), null).getPostid() > 5677) {
+                //System.out.println(entry.getValue().size());
+                //entry.getValue().forEach(o-> System.out.println(ToStringBuilder.reflectionToString(o)));
+                entry.getValue().forEach(o -> idList.add(o.getPostid()));
             }
         }
+        System.out.println(idList);
     }
 
 

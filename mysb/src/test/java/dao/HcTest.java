@@ -21,12 +21,16 @@ public class HcTest {
 
     @Test
     public void hcCatchCatchTest() throws Exception {
-        hcCatch.main(HcCatch.爬蟲type.單行本, false);
+        hcCatch.main(HcCatch.爬蟲type.同人和cosplay, false);
+    }
+    @Test
+    public void hcCatchCatchTest2() throws Exception {
+        hcCatch.main(HcCatch.爬蟲type.雜誌, false);
     }
 
     @Test
     public void hcCatchDownloadTest() throws Exception {
-        hcCatch.main(HcCatch.爬蟲type.單行本, true);
+        hcCatch.main(HcCatch.爬蟲type.同人和cosplay, true);
     }
 
     @Test

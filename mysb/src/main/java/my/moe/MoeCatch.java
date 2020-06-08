@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 public class MoeCatch {
     private HttpUtils h = new HttpUtils();
     private static List<Integer> skipPost = Arrays.asList(2057, 2924, 4098, 5604, 5603, 5602, 5588, 5458, 5436, 5339, 5203, 5121, 5114,
-            96957, 96780, 6247, 5618, 5544, 6158, 5750, 96641, 5751, 6101, 6022, 6100, 6009);
+            96957, 96780, 6247, 5618, 5544, 6158, 5750, 96641, 5751, 6101, 6022, 6100, 6009, 6345);
 
 
     private static String fileSavePath = "d:/moe/post";
@@ -118,7 +118,7 @@ public class MoeCatch {
 
             } else if (subTitle.length() <= 6
                     || StringUtils.endsWithAny(subTitle.toLowerCase(), "pireze", "available from", "available from:")) {// 如果長度小於5也不採用
-            } else {
+            } else if (!確認要使用title1(moePool.getTitle1(), subTitle)) {
                 moePool.setTitle2(subTitle);
             }
         }
@@ -164,7 +164,7 @@ public class MoeCatch {
 
     public static boolean 確認要使用title1(String title1, String title2) {
         Pattern pattern = Pattern.compile("[\\u3042-\\u30FC]");//羅馬拼音
-        List<String> notInList = Arrays.asList("Sourced", "Artist","a href");
+        List<String> notInList = Arrays.asList("Sourced", "Artist", "a href");
 
 
         int use1 = 0;

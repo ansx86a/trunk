@@ -43,7 +43,7 @@ public class ExController {
         ex.setOrderByClause("exid desc");
         ex.createCriteria().andLookedEqualTo(0);
         List<ExPool> list = exPoolMapper.selectByExample(ex);
-
+        System.out.println("count=========" + list.size());
 //		假如是e站就替換掉url: {
 //			returnJsp = "/jsp/e.jsp";
 //			for (HashMap m : list) {
