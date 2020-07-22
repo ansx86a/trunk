@@ -98,6 +98,26 @@
             <artifactId>guava</artifactId>
             <version>28.2-jre</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.141.59</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.sun.mail/imap -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>imap</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.sun.mail/pop3 -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>pop3</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+
+
 
         <!-- swagger的測試 先拿掉不然讀不到static resource-->
 <!--        <dependency>-->
