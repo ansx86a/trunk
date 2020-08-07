@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <title>test</title>
+    <script type="text/javascript" src="jquery-3.0.0.min.js"></script>
+</head>
+<input type="file" id="myfile" />
+<input type="button" onclick="doSend()" value="上傳" />
+</body>
+<script>
+function doSend() {
+    //看起來formData的原理就像是multipart的感覺
+    var data = new FormData();
+    data.append("file", $("#myfile")[0].files[0]);
+    data.append("aaa", "aaa");
+    data.append("bbb", "bbb");
+
+    $.ajax({
+        url: "upload",
+        data: data,
+        async: false,
+        type: "POST",
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            alert(data);
+        }
+
+    }).done(function() {
+        $(this).addClass("done");
+    });
+}
+</script>
+
+</html>
