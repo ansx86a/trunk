@@ -71,14 +71,14 @@ public class ExCatch {
         ex.init();
         if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
 //            for (int i = 6700; i <= 6900; i++) {// 感覺有很多莫名的資料，很古怪，順序有問題？改天全部重掃嗎？
-            int from = 700;
-			for (int i = from; i <= from+200; i++) {
+            int from = 9100;
+			for (int i = from; i <= from+1; i++) {
                 // String url = "https://exhentai.org/?page=" + i;
                 //要再確認一次url有沒有變，是不是變成全讀cookies，才不會把不要的東西弄進來
                 String url = site == Site.ex ? "https://exhentai.org/?page=" + i : "https://e-hentai.org/?page=" + i + "&f_cats=745";
                 System.out.println(url);
                 ex.讀取文章列表(url);
-                Thread.sleep(5_000);// 每個主頁分開2秒，才不會讀太快
+                Thread.sleep(15_000);// 每個主頁分開2秒，才不會讀太快
             }
             System.out.println("end");
             return;
