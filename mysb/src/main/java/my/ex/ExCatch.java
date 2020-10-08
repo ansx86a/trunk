@@ -4,6 +4,7 @@ import dao.ExPoolMapper;
 import dao.domain.ExPool;
 import dao.domain.ExPoolExample;
 import http.HttpUtils;
+import jdk.internal.jline.internal.Urls;
 import my.共用;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -15,7 +16,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import utils.Utils;
 
 import java.io.File;
@@ -46,7 +50,10 @@ public class ExCatch {
         爬蟲, 捉圖, 檢查不下載,
     }
 
+    private static boolean REMOTE_MODE = false;
+
     private static Site site = Site.ex;
+    private boolean initFlag;
     private Extype type = Extype.捉圖;
     private HttpUtils h = new HttpUtils();
     // 檔案相關
@@ -65,6 +72,31 @@ public class ExCatch {
     public Date stopDate = DateUtils.addMinutes(new Date(), 1 * 60 * 24);// 多久停止
     @Autowired
     private ExPoolMapper exPoolMapper;
+
+    private static String REMOTE_ADDR = "http://192.168.66.29/ex/imgurl?addr=";
+
+    @GetMapping("imgurl")
+    @ResponseBody
+    public String getExUrl(String addr) {
+        try {
+            if (!initFlag) {
+                init();
+            }
+            return h.cookiesHttp(addr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "fail";
+    }
+
+    public String doRemoteImgPage(String addr) {
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(REMOTE_ADDR + addr, String.class);
+        if ("fail".equals(result) || StringUtils.isBlank(result)) {
+            throw new RuntimeException("遠端錯誤：" + addr);
+        }
+        return result;
+    }
 
     public void main() throws Exception {
         ExCatch ex = this;
@@ -123,6 +155,7 @@ public class ExCatch {
         String path = site == Site.ex ? "my/ex.txt" : "my/e.txt";
         String cookieStr = FileUtils.readFileToString(Utils.getResourceFromRoot(path));
         h.setCookieStore(cookieStr);
+        initFlag = true;
     }
 
     public void 讀取文章列表(String url) throws IOException {
@@ -245,7 +278,7 @@ public class ExCatch {
         String imgSrc = doc.select("#i3 img").attr("src");
         String info = doc.select("#i4").text();
         String fail = doc.select("#loadfail").attr("onclick");
-		String failValue = StringUtils.substringBefore(StringUtils.substringAfter(fail, "'"), "'");
+        String failValue = StringUtils.substringBefore(StringUtils.substringAfter(fail, "'"), "'");
         System.out.println(imgSrc);
         System.out.println(info);
 
@@ -275,7 +308,11 @@ public class ExCatch {
             try {
                 doThreadSleep();
                 count++;
-                return h.cookiesHttp(imgUrl);
+                if (REMOTE_MODE) {
+                    return doRemoteImgPage(imgUrl);
+                } else {
+                    return h.cookiesHttp(imgUrl);
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
