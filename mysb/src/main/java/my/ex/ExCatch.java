@@ -4,7 +4,6 @@ import dao.ExPoolMapper;
 import dao.domain.ExPool;
 import dao.domain.ExPoolExample;
 import http.HttpUtils;
-import jdk.internal.jline.internal.Urls;
 import my.共用;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -16,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,7 +50,7 @@ public class ExCatch {
         爬蟲, 捉圖, 檢查不下載,
     }
 
-    private static boolean REMOTE_MODE = false;
+    private static boolean REMOTE_MODE = true;
 
     private static Site site = Site.ex;
     private boolean initFlag;
@@ -73,7 +73,7 @@ public class ExCatch {
     @Autowired
     private ExPoolMapper exPoolMapper;
 
-    private static String REMOTE_ADDR = "http://192.168.66.29/ex/imgurl?addr=";
+    private static String REMOTE_ADDR = "http://127.0.0.1:8080/ex/imgurl?addr=";
 
     @GetMapping("imgurl")
     @ResponseBody
@@ -153,7 +153,7 @@ public class ExCatch {
         // 設定可並行的管線數目，設x就程示同時跑x+1個，不用參數的話要研究ForkJoinPool，太麻煩了
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
         String path = site == Site.ex ? "my/ex.txt" : "my/e.txt";
-        String cookieStr = FileUtils.readFileToString(Utils.getResourceFromRoot(path));
+        String cookieStr = FileUtils.readFileToString(ResourceUtils.getFile("classpath:"+path));
         h.setCookieStore(cookieStr);
         initFlag = true;
     }
