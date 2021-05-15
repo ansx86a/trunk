@@ -50,7 +50,7 @@ public class ExCatch {
         爬蟲, 捉圖, 檢查不下載,
     }
 
-    private static boolean REMOTE_MODE = true;
+    private static boolean REMOTE_MODE = false;
 
     private static Site site = Site.ex;
     private boolean initFlag;
@@ -73,7 +73,8 @@ public class ExCatch {
     @Autowired
     private ExPoolMapper exPoolMapper;
 
-    private static String REMOTE_ADDR = "http://127.0.0.1:8080/ex/imgurl?addr=";
+//    private static String REMOTE_ADDR = "http://192.168.66.15:8080/ex/imgurl?addr=";
+    private static String REMOTE_ADDR = "http://192.168.43.20:8080/ex/imgurl?addr=";
 
     @GetMapping("imgurl")
     @ResponseBody
@@ -98,12 +99,14 @@ public class ExCatch {
         return result;
     }
 
-    public void main() throws Exception {
+    public void main(boolean remote,int stopCount) throws Exception {
+        REMOTE_MODE = remote;
+        this.stopCount = stopCount;
         ExCatch ex = this;
         ex.init();
         if (ex.type == Extype.爬蟲) {// 從20頁開始捉，我不想捉到有上傳到一半的
 //            for (int i = 6700; i <= 6900; i++) {// 感覺有很多莫名的資料，很古怪，順序有問題？改天全部重掃嗎？
-            int from = 9100;
+            int from = 1_1600;
 			for (int i = from; i <= from+1; i++) {
                 // String url = "https://exhentai.org/?page=" + i;
                 //要再確認一次url有沒有變，是不是變成全讀cookies，才不會把不要的東西弄進來
@@ -216,7 +219,7 @@ public class ExCatch {
         Elements es = doc.select(".gdtl a");
         es.parallelStream().forEach(e -> {
             String imgUrl = e.attr("href");
-            String page = e.text();
+            String page = StringUtils.substringAfterLast(imgUrl,"-");// e.text();
             System.out.println("page = " + page + ",imgUrl=" + imgUrl);
             try {
                 checkSleep();
