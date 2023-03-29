@@ -14,8 +14,8 @@ public class 同人音聲處理 {
 
 	static List<String> noCareList = new ArrayList<>();
 	static {
-//		noCareList.add("RJ280239");
-//		noCareList.add("RJ282000");
+//		noCareList.add("RJ436572");
+//		noCareList.add("RJ435674");
 //		noCareList.add("RJ278635");
 //		noCareList.add("RJ276680");
 //		noCareList.add("RJ271908");
@@ -42,8 +42,8 @@ public class 同人音聲處理 {
 
 	public static void main(String[] args) throws IOException {
 		同人音聲處理 a = new 同人音聲處理();
-		String zipDir = "G:\\micovoice2020\\04\\ok";
-		String txtPath = "G:\\micovoice2020\\04\\download04.txt";
+		String zipDir = "E:\\voice2022\\202212\\rar";
+		String txtPath = "E:\\voice2022\\202212\\202212.txt";
 		// String zipDir = "H:\\micovoice\\201905\\ok";
 		// String txtPath="E:\\googleDrive\\my\\download05.txt";
 
@@ -65,7 +65,7 @@ public class 同人音聲處理 {
 
 		// 先從file去檢查
 		Label_File_Loop: for (String fileName : fileList) {
-			String fileNameResult = 正規表示式取值.取得第一個值("RJ[0-9]{6}", fileName);
+			String fileNameResult = 正規表示式取值.取得第一個值(getRegex(), fileName);
 			System.out.println("check file" + fileName);
 			if (StringUtils.isBlank(fileNameResult)) {
 				throw new RuntimeException("沒有RJ號");
@@ -73,7 +73,7 @@ public class 同人音聲處理 {
 			int j = 0;
 			for (String line : txtList) {
 				j++;
-				String result = 正規表示式取值.取得第一個值("RJ[0-9]{6}", line);
+				String result = 正規表示式取值.取得第一個值(getRegex(), line);
 				if (StringUtils.isBlank(result)) {
 					continue;
 				}
@@ -98,7 +98,7 @@ public class 同人音聲處理 {
 				continue;
 			}
 			System.out.println("check txt " + line);
-			String result = 正規表示式取值.取得第一個值("RJ[0-9]{6}", line);
+			String result = 正規表示式取值.取得第一個值(getRegex(), line);
 			if (StringUtils.isBlank(result)) {
 				throw new RuntimeException("沒有RJ號");
 			}
@@ -108,7 +108,7 @@ public class 同人音聲處理 {
 			}
 
 			for (String fileName : fileList) {
-				String fileNameResult = 正規表示式取值.取得第一個值("RJ[0-9]{6}", fileName);
+				String fileNameResult = 正規表示式取值.取得第一個值(getRegex(), fileName);
 
 				if (result.equals(fileNameResult)) {
 					// System.out.println("\t" + fileNameResult + "\t" + fileName);
@@ -122,6 +122,10 @@ public class 同人音聲處理 {
 			throw new RuntimeException("沒有在file中找到");
 		}
 
+	}
+
+	private String getRegex() {
+		return "[RBV]J[0-9]{6}";
 	}
 
 	public void 處理目錄(File checkDir, File txtFile) throws IOException {
@@ -139,13 +143,13 @@ public class 同人音聲處理 {
 			if (line.startsWith("ok")) {
 				continue;
 			}
-			String result = 正規表示式取值.取得第一個值("RJ[0-9]{6}", line);
+			String result = 正規表示式取值.取得第一個值(getRegex(), line);
 			if (StringUtils.isBlank(result)) {
 				continue;
 			}
 
 			for (String fileName : fileList) {
-				String fileNameResult = 正規表示式取值.取得第一個值("RJ[0-9]{6}", fileName);
+				String fileNameResult = 正規表示式取值.取得第一個值(getRegex(), fileName);
 				if (result.equals(fileNameResult)) {
 					System.out.println("\t" + fileNameResult + "\t" + fileName);
 					System.out.print(i + "\t" + result + "\t");
@@ -156,14 +160,14 @@ public class 同人音聲處理 {
 		System.out.println("================================================================");
 		// fileBase，列出file中有的列表
 		for (String fileName : fileList) {
-			String fileNameResult = 正規表示式取值.取得第一個值("RJ[0-9]{6}", fileName);
+			String fileNameResult = 正規表示式取值.取得第一個值(getRegex(), fileName);
 			if (StringUtils.isBlank(fileNameResult)) {
 				continue;
 			}
 			int j = 0;
 			for (String line : txtList) {
 				j++;
-				String result = 正規表示式取值.取得第一個值("RJ[0-9]{6}", line);
+				String result = 正規表示式取值.取得第一個值(getRegex(), line);
 				if (StringUtils.isBlank(result)) {
 					continue;
 				}
